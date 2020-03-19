@@ -12,4 +12,5 @@ Encoding: UTF-8
 RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
-StripTrailingWhitespace: Yes
+BuildType: Website
+WebsitePath: D:/GitHubRepo/tschwebke.github.io

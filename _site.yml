@@ -1,6 +1,8 @@
-name: "my site"
+name: "my-website"
 navbar:
-  title: "My Site"
+  title: "My Website"
   left:
-    text: "Home"
-    href: index.html
+    - text: "Home"
+      href: index.html
+    - text: "CLT"
+      href: CLT_2.html
