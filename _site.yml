@@ -1,0 +1,6 @@
+name: "my site"
+navbar:
+  title: "My Site"
+  left:
+    text: "Home"
+    href: index,html
