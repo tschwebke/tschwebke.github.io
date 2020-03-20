@@ -1,1 +1,9 @@
 theme: jekyll-theme-leap-day
+name: "my-website"
+navbar:
+  title: "My Website"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "CLT"
+      href: CLT_2.html
