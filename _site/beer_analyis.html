@@ -368,47 +368,26 @@ During Live Session for Unit 9, the professor will be available for a live Q &am
 <div id="load-libraries" class="section level2">
 <h2>Load Libraries</h2>
 <pre class="r"><code>#install.packages(&quot;vctrs&quot;)
-library(vctrs)</code></pre>
-<pre><code>## Warning: package &#39;vctrs&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(qwraps2)</code></pre>
-<pre><code>## Warning: package &#39;qwraps2&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(tidyverse) # super library that loads dplyr, ggplot2, lubridate, tidyr, stringr, etc.</code></pre>
-<pre><code>## Warning: package &#39;tidyverse&#39; was built under R version 3.6.2</code></pre>
-<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.6.2</code></pre>
-<pre><code>## Warning: package &#39;tidyr&#39; was built under R version 3.6.2</code></pre>
-<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(DataExplorer) # shows missing values by bar and percentage.</code></pre>
-<pre><code>## Warning: package &#39;DataExplorer&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(maps) # used for heat map</code></pre>
-<pre><code>## Warning: package &#39;maps&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(openintro) # used to convert state abbreviation to full state name
-library(gdata)</code></pre>
-<pre><code>## Warning: package &#39;gdata&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(mapdata)</code></pre>
-<pre><code>## Warning: package &#39;mapdata&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(mime)</code></pre>
-<pre><code>## Warning: package &#39;mime&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(treemap) # used for displaying hierarchical data as a set of nested rectangles</code></pre>
-<pre><code>## Warning: package &#39;treemap&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(VIM)</code></pre>
-<pre><code>## Warning: package &#39;VIM&#39; was built under R version 3.6.2</code></pre>
-<pre><code>## Warning: package &#39;data.table&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(inspectdf) #usd for columnwise summary, comparison and visualisation of data frames</code></pre>
-<pre><code>## Warning: package &#39;inspectdf&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(GGally) # used for ggpairs ()to plot multiple variables, combines different plots into matrix</code></pre>
-<pre><code>## Warning: package &#39;GGally&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(fiftystater)# use to plot 50-state choropleth thematic maps with ggplot2 in R
-library(ggthemes)# used for adding some extra themes, geoms, and scales for &#39;ggplot2</code></pre>
-<pre><code>## Warning: package &#39;ggthemes&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(gridExtra)</code></pre>
-<pre><code>## Warning: package &#39;gridExtra&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(class)</code></pre>
-<pre><code>## Warning: package &#39;class&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(broom)</code></pre>
-<pre><code>## Warning: package &#39;broom&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>library(caret)</code></pre>
-<pre><code>## Warning: package &#39;caret&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>theme_set(theme_classic())</code></pre>
+library(vctrs)
+library(qwraps2)
+library(tidyverse) # super library that loads dplyr, ggplot2, lubridate, tidyr, stringr, etc.
+library(DataExplorer) # shows missing values by bar and percentage.
+library(maps) # used for heat map
+library(openintro) # used to convert state abbreviation to full state name
+library(gdata)
+library(mapdata)
+library(mime)
+library(treemap) # used for displaying hierarchical data as a set of nested rectangles
+library(VIM)
+library(inspectdf) #usd for columnwise summary, comparison and visualisation of data frames
+library(GGally) # used for ggpairs ()to plot multiple variables, combines different plots into matrix
+library(fiftystater)# use to plot 50-state choropleth thematic maps with ggplot2 in R
+library(ggthemes)# used for adding some extra themes, geoms, and scales for &#39;ggplot2
+library(gridExtra)
+library(class)
+library(broom)
+library(caret)
+theme_set(theme_classic())</code></pre>
 </div>
 <div id="load-data" class="section level2">
 <h2>Load Data</h2>
@@ -560,9 +539,8 @@ state_center_region &lt;- brewery_map_df %&gt;% group_by(State) %&gt;%
   summarize_at(vars(long, lat), ~ mean(range(.)))
 all.equal(state_center, as.data.frame(state_center_region))</code></pre>
 <pre><code>## [1] TRUE</code></pre>
-<pre class="r"><code>library(mapproj) # for coord_map function - projects map in spherical into 2D</code></pre>
-<pre><code>## Warning: package &#39;mapproj&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>ggplot(data = brewery_map_df) +
+<pre class="r"><code>library(mapproj) # for coord_map function - projects map in spherical into 2D
+ggplot(data = brewery_map_df) +
   geom_path(aes(x = long, y = lat, group = group), color = &quot;white&quot;) +
   geom_polygon(aes(
     x = long,
@@ -981,6 +959,7 @@ beer_brewery_merged_df %&gt;% na.omit() %&gt;% # use only data without NAs
         legend.position = &quot;none&quot;) +
   labs(x = &quot;ABV&quot;, y = &quot;IBU&quot;) +
   ggtitle(&quot;Relationship between IBU and ABV&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
 <p><img src="beer_analyis_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <pre class="r"><code>#Pearson&#39;s correlation with original data
 cor.test(beer_brewery_merged_df$IBU, beer_brewery_merged_df$ABV)</code></pre>
@@ -1020,37 +999,24 @@ summary(mod) # display summary statistic of our mod</code></pre>
 beer_brewery_merged_df %&gt;% na.omit() %&gt;%
   select(ABV, IBU, Ounces, Beer_Type) %&gt;%
   ggpairs(mapping = aes(color = &quot;ABV&quot;))</code></pre>
-<pre><code>## 
- plot: [1,1] [=====&gt;------------------------------------------------------------------------------------]  6% est: 0s 
- plot: [1,2] [==========&gt;-------------------------------------------------------------------------------] 12% est: 1s 
- plot: [1,3] [================&gt;-------------------------------------------------------------------------] 19% est: 1s 
- plot: [1,4] [=====================&gt;--------------------------------------------------------------------] 25% est: 1s 
- plot: [2,1] [===========================&gt;--------------------------------------------------------------] 31% est: 1s 
- plot: [2,2] [=================================&gt;--------------------------------------------------------] 38% est: 1s 
- plot: [2,3] [======================================&gt;---------------------------------------------------] 44% est: 1s 
- plot: [2,4] [============================================&gt;---------------------------------------------] 50% est: 1s 
- plot: [3,1] [==================================================&gt;---------------------------------------] 56% est: 1s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-## 
- plot: [3,2] [=======================================================&gt;----------------------------------] 62% est: 1s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-## 
- plot: [3,3] [=============================================================&gt;----------------------------] 69% est: 1s 
- plot: [3,4] [===================================================================&gt;----------------------] 75% est: 1s 
- plot: [4,1] [========================================================================&gt;-----------------] 81% est: 0s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-## 
- plot: [4,2] [==============================================================================&gt;-----------] 88% est: 0s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-## 
- plot: [4,3] [===================================================================================&gt;------] 94% est: 0s 
- plot: [4,4] [==========================================================================================]100% est: 0s 
-                                                                                                                      </code></pre>
-<p><img src="beer_analyis_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<pre><code>## ```
+</code></pre>
 </div>
-<div id="question-8" class="section level2">
-<h2>Question 8</h2>
-<ol start="8" style="list-style-type: decimal">
-<li>Budweiser would also like to investigate the difference with respect to IBU and ABV between IPAs (India Pale Ales) and other types of Ale (any beer with “Ale” in its name other than IPA). You decide to use KNN classification to investigate this relationship. Provide statistical evidence one way or the other. You can of course assume your audience is comfortable with percentages … KNN is very easy to understand conceptually.</li>
-</ol>
-<p>In addition, while you have decided to use KNN to investigate this relationship (KNN is required) you may also feel free to supplement your response to this question with any other methods or techniques you have learned. Creativity and alternative solutions are always encouraged.</p>
-<pre class="r"><code># Filter out any beer style that isnt and IPA or an Ale.
+<div id="plot-11-6-est-0s" class="section level2">
+<h2>plot: [1,1] [=====&gt;————————————————————————————] 6% est: 0s</h2>
+<p>plot: [1,2] [==========&gt;——————————————————————————-] 12% est: 1s plot: [1,3] [================&gt;————————————————————————-] 19% est: 1s plot: [1,4] [=====================&gt;——————————————————————–] 25% est: 1s plot: [2,1] [===========================&gt;————————————————————–] 31% est: 1s plot: [2,2] [=================================&gt;——————————————————–] 38% est: 1s plot: [2,3] [======================================&gt;—————————————————] 44% est: 1s plot: [2,4] [============================================&gt;———————————————] 50% est: 1s plot: [3,1] [==================================================&gt;—————————————] 56% est: 1s <code>stat_bin()</code> using <code>bins = 30</code>. Pick better value with <code>binwidth</code>. ## plot: [3,2] [=======================================================&gt;———————————-] 62% est: 1s <code>stat_bin()</code> using <code>bins = 30</code>. Pick better value with <code>binwidth</code>. ## plot: [3,3] [=============================================================&gt;—————————-] 69% est: 1s plot: [3,4] [===================================================================&gt;———————-] 75% est: 1s plot: [4,1] [========================================================================&gt;—————–] 81% est: 1s <code>stat_bin()</code> using <code>bins = 30</code>. Pick better value with <code>binwidth</code>. ## plot: [4,2] [==============================================================================&gt;———–] 88% est: 0s <code>stat_bin()</code> using <code>bins = 30</code>. Pick better value with <code>binwidth</code>. ## plot: [4,3] [===================================================================================&gt;——] 94% est: 0s plot: [4,4] [==========================================================================================]100% est: 0s</p>
+<pre><code>
+&lt;img src=&quot;beer_analyis_files/figure-html/unnamed-chunk-10-2.png&quot; width=&quot;672&quot; /&gt;
+
+
+## Question 8
+8.  Budweiser would also like to investigate the difference with respect to IBU and ABV between IPAs (India Pale Ales) and other types of Ale (any beer with “Ale” in its name other than IPA).  You decide to use KNN classification to investigate this relationship.  Provide statistical evidence one way or the other. You can of course assume your audience is comfortable with percentages … KNN is very easy to understand conceptually.
+
+In addition, while you have decided to use KNN to investigate this relationship (KNN is required) you may also feel free to supplement your response to this question with any other methods or techniques you have learned.  Creativity and alternative solutions are always encouraged.  
+
+
+```r
+# Filter out any beer style that isnt and IPA or an Ale.
 beer_brewery_IPAandALE &lt;-
   filter(beer_brewery_merged_df, grepl(&#39;IPA|Ale&#39;, Style))
 beer_brewery_IPAandALE &lt;- beer_brewery_IPAandALE[, -8]
