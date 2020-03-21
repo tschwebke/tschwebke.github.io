@@ -5,10 +5,10 @@ date: "3/21/2020"
 output: html_document
 ---
 
-![Me](pic.jfif)
+[logo]:pic.jfif
 
 # Thad Schwebke
-![LinkedIn Profile](www.linkedin.com/in/thadschwebke)
+[LinkedIn Profile]:www.linkedin.com/in/thadschwebke
 Sr Support Planner at Microsoft
 Dallas/Fort Worth Area
 
@@ -45,4 +45,4 @@ Patent dateIssued Jan 27, 2009  Patent issuer and numberus 7,483,898
 
 Patent descriptionA network is audited by running task programs and evaluating the results of the task programs. Task programs are tools that are configured to retrieve information about a particular network device. A service is arranged to coordinate the scheduling, execution, and data collection and aggregation of each task program over disparate networks such as multiple domains. Each task program executes at a scheduled time and provides results to a parser. The parser formats the results and provides the formatted data to the service. The service stores the collected data in a database. A client can schedule and/or review the results of audits by communicating with the service. The collected data can be compared and filtered according to rule-based templates that define acceptable network device configurations. Reports can be generated based on the templates such that a client can evaluate results from task programs executed over the entire network.
 
-The other tabs represent work / analyses that I have completed.  ![Please check them out!](beer.html)
+The other tabs represent work / analyses that I have completed.  [Please check them out!]: beer.html

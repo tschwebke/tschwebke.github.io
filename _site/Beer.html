@@ -415,8 +415,7 @@ breweries_df &lt;-
 <h2>Inspect the data</h2>
 <pre class="r"><code>#View(beers_df) # view the complete dataframe
 names(beers_df) # view the variable names</code></pre>
-<pre><code>## [1] &quot;Name&quot;       &quot;Beer_ID&quot;    &quot;ABV&quot;        &quot;IBU&quot;        &quot;Brewery_id&quot;
-## [6] &quot;Style&quot;      &quot;Ounces&quot;</code></pre>
+<pre><code>## [1] &quot;Name&quot;       &quot;Beer_ID&quot;    &quot;ABV&quot;        &quot;IBU&quot;        &quot;Brewery_id&quot; &quot;Style&quot;      &quot;Ounces&quot;</code></pre>
 <pre class="r"><code>dim(beers_df) # view the dimensions of the data</code></pre>
 <pre><code>## [1] 2410    7</code></pre>
 <pre class="r"><code>str(beers_df) # view the structure of the data</code></pre>
@@ -429,56 +428,36 @@ names(beers_df) # view the variable names</code></pre>
 ##  $ Style     : Factor w/ 100 levels &quot;&quot;,&quot;Abbey Single Ale&quot;,..: 19 18 16 12 16 80 18 22 18 12 ...
 ##  $ Ounces    : num  12 12 12 12 12 12 12 12 12 12 ...</code></pre>
 <pre class="r"><code>head(beers_df, n = 5) # view the first 5 records</code></pre>
-<pre><code>##                  Name Beer_ID   ABV IBU Brewery_id
-## 1            Pub Beer    1436 0.050  NA        409
-## 2         Devil&#39;s Cup    2265 0.066  NA        178
-## 3 Rise of the Phoenix    2264 0.071  NA        178
-## 4            Sinister    2263 0.090  NA        178
-## 5       Sex and Candy    2262 0.075  NA        178
-##                            Style Ounces
-## 1            American Pale Lager     12
-## 2        American Pale Ale (APA)     12
-## 3                   American IPA     12
-## 4 American Double / Imperial IPA     12
-## 5                   American IPA     12</code></pre>
+<pre><code>##                  Name Beer_ID   ABV IBU Brewery_id                          Style Ounces
+## 1            Pub Beer    1436 0.050  NA        409            American Pale Lager     12
+## 2         Devil&#39;s Cup    2265 0.066  NA        178        American Pale Ale (APA)     12
+## 3 Rise of the Phoenix    2264 0.071  NA        178                   American IPA     12
+## 4            Sinister    2263 0.090  NA        178 American Double / Imperial IPA     12
+## 5       Sex and Candy    2262 0.075  NA        178                   American IPA     12</code></pre>
 <pre class="r"><code>tail(beers_df, n = 5) # view the last 5 records</code></pre>
-<pre><code>##                      Name Beer_ID   ABV IBU Brewery_id                    Style
-## 2406            Belgorado     928 0.067  45        425              Belgian IPA
-## 2407        Rail Yard Ale     807 0.052  NA        425 American Amber / Red Ale
-## 2408      B3K Black Lager     620 0.055  NA        425              Schwarzbier
-## 2409  Silverback Pale Ale     145 0.055  40        425  American Pale Ale (APA)
-## 2410 Rail Yard Ale (2009)      84 0.052  NA        425 American Amber / Red Ale
-##      Ounces
-## 2406     12
-## 2407     12
-## 2408     12
-## 2409     12
-## 2410     12</code></pre>
+<pre><code>##                      Name Beer_ID   ABV IBU Brewery_id                    Style Ounces
+## 2406            Belgorado     928 0.067  45        425              Belgian IPA     12
+## 2407        Rail Yard Ale     807 0.052  NA        425 American Amber / Red Ale     12
+## 2408      B3K Black Lager     620 0.055  NA        425              Schwarzbier     12
+## 2409  Silverback Pale Ale     145 0.055  40        425  American Pale Ale (APA)     12
+## 2410 Rail Yard Ale (2009)      84 0.052  NA        425 American Amber / Red Ale     12</code></pre>
 <pre class="r"><code>summary(beers_df) # view basic model data i.e. min, max, mdedium, mean, etc.</code></pre>
-<pre><code>##                      Name         Beer_ID            ABV         
-##  Nonstop Hef Hop       :  12   Min.   :   1.0   Min.   :0.00100  
-##  Dale&#39;s Pale Ale       :   6   1st Qu.: 808.2   1st Qu.:0.05000  
-##  Oktoberfest           :   6   Median :1453.5   Median :0.05600  
-##  Longboard Island Lager:   4   Mean   :1431.1   Mean   :0.05977  
-##  1327 Pod&#39;s ESB        :   3   3rd Qu.:2075.8   3rd Qu.:0.06700  
-##  Boston Lager          :   3   Max.   :2692.0   Max.   :0.12800  
-##  (Other)               :2376                    NA&#39;s   :62       
-##       IBU           Brewery_id                               Style     
-##  Min.   :  4.00   Min.   :  1.0   American IPA                  : 424  
-##  1st Qu.: 21.00   1st Qu.: 94.0   American Pale Ale (APA)       : 245  
-##  Median : 35.00   Median :206.0   American Amber / Red Ale      : 133  
-##  Mean   : 42.71   Mean   :232.7   American Blonde Ale           : 108  
-##  3rd Qu.: 64.00   3rd Qu.:367.0   American Double / Imperial IPA: 105  
-##  Max.   :138.00   Max.   :558.0   American Pale Wheat Ale       :  97  
-##  NA&#39;s   :1005                     (Other)                       :1298  
-##      Ounces     
-##  Min.   : 8.40  
-##  1st Qu.:12.00  
-##  Median :12.00  
-##  Mean   :13.59  
-##  3rd Qu.:16.00  
-##  Max.   :32.00  
-## </code></pre>
+<pre><code>##                      Name         Beer_ID            ABV               IBU           Brewery_id   
+##  Nonstop Hef Hop       :  12   Min.   :   1.0   Min.   :0.00100   Min.   :  4.00   Min.   :  1.0  
+##  Dale&#39;s Pale Ale       :   6   1st Qu.: 808.2   1st Qu.:0.05000   1st Qu.: 21.00   1st Qu.: 94.0  
+##  Oktoberfest           :   6   Median :1453.5   Median :0.05600   Median : 35.00   Median :206.0  
+##  Longboard Island Lager:   4   Mean   :1431.1   Mean   :0.05977   Mean   : 42.71   Mean   :232.7  
+##  1327 Pod&#39;s ESB        :   3   3rd Qu.:2075.8   3rd Qu.:0.06700   3rd Qu.: 64.00   3rd Qu.:367.0  
+##  Boston Lager          :   3   Max.   :2692.0   Max.   :0.12800   Max.   :138.00   Max.   :558.0  
+##  (Other)               :2376                    NA&#39;s   :62        NA&#39;s   :1005                    
+##                             Style          Ounces     
+##  American IPA                  : 424   Min.   : 8.40  
+##  American Pale Ale (APA)       : 245   1st Qu.:12.00  
+##  American Amber / Red Ale      : 133   Median :12.00  
+##  American Blonde Ale           : 108   Mean   :13.59  
+##  American Double / Imperial IPA: 105   3rd Qu.:16.00  
+##  American Pale Wheat Ale       :  97   Max.   :32.00  
+##  (Other)                       :1298</code></pre>
 <pre class="r"><code>plot_missing(beers_df) #shows missing values using package DataExplorer</code></pre>
 <p><img src="Beer_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <pre class="r"><code>names(breweries_df) # view the variable names</code></pre>
@@ -615,31 +594,31 @@ all.equal(state_center, as.data.frame(state_center_region))</code></pre>
 <pre class="r"><code>beer_brewery_merged_df &lt;-
   full_join(beers_df, breweries_df, by = &quot;Brewery_id&quot;) # merge by  full_join  using key word  Brewery_id
 head(beer_brewery_merged_df, n = 5) # view the first 5 records</code></pre>
-<pre><code>##             Beer_Name Beer_ID   ABV IBU Brewery_id
-## 1            Pub Beer    1436 0.050  NA        409
-## 2         Devil&#39;s Cup    2265 0.066  NA        178
-## 3 Rise of the Phoenix    2264 0.071  NA        178
-## 4            Sinister    2263 0.090  NA        178
-## 5       Sex and Candy    2262 0.075  NA        178
-##                            Style Ounces              Brewery_Name City State
-## 1            American Pale Lager     12 10 Barrel Brewing Company Bend    OR
-## 2        American Pale Ale (APA)     12       18th Street Brewery Gary    IN
-## 3                   American IPA     12       18th Street Brewery Gary    IN
-## 4 American Double / Imperial IPA     12       18th Street Brewery Gary    IN
-## 5                   American IPA     12       18th Street Brewery Gary    IN</code></pre>
+<pre><code>##             Beer_Name Beer_ID   ABV IBU Brewery_id                          Style Ounces              Brewery_Name City
+## 1            Pub Beer    1436 0.050  NA        409            American Pale Lager     12 10 Barrel Brewing Company Bend
+## 2         Devil&#39;s Cup    2265 0.066  NA        178        American Pale Ale (APA)     12       18th Street Brewery Gary
+## 3 Rise of the Phoenix    2264 0.071  NA        178                   American IPA     12       18th Street Brewery Gary
+## 4            Sinister    2263 0.090  NA        178 American Double / Imperial IPA     12       18th Street Brewery Gary
+## 5       Sex and Candy    2262 0.075  NA        178                   American IPA     12       18th Street Brewery Gary
+##   State
+## 1    OR
+## 2    IN
+## 3    IN
+## 4    IN
+## 5    IN</code></pre>
 <pre class="r"><code>tail(beer_brewery_merged_df, n = 5) # view the last 5 records</code></pre>
-<pre><code>##                 Beer_Name Beer_ID   ABV IBU Brewery_id                    Style
-## 2406            Belgorado     928 0.067  45        425              Belgian IPA
-## 2407        Rail Yard Ale     807 0.052  NA        425 American Amber / Red Ale
-## 2408      B3K Black Lager     620 0.055  NA        425              Schwarzbier
-## 2409  Silverback Pale Ale     145 0.055  40        425  American Pale Ale (APA)
-## 2410 Rail Yard Ale (2009)      84 0.052  NA        425 American Amber / Red Ale
-##      Ounces            Brewery_Name   City State
-## 2406     12 Wynkoop Brewing Company Denver    CO
-## 2407     12 Wynkoop Brewing Company Denver    CO
-## 2408     12 Wynkoop Brewing Company Denver    CO
-## 2409     12 Wynkoop Brewing Company Denver    CO
-## 2410     12 Wynkoop Brewing Company Denver    CO</code></pre>
+<pre><code>##                 Beer_Name Beer_ID   ABV IBU Brewery_id                    Style Ounces            Brewery_Name   City
+## 2406            Belgorado     928 0.067  45        425              Belgian IPA     12 Wynkoop Brewing Company Denver
+## 2407        Rail Yard Ale     807 0.052  NA        425 American Amber / Red Ale     12 Wynkoop Brewing Company Denver
+## 2408      B3K Black Lager     620 0.055  NA        425              Schwarzbier     12 Wynkoop Brewing Company Denver
+## 2409  Silverback Pale Ale     145 0.055  40        425  American Pale Ale (APA)     12 Wynkoop Brewing Company Denver
+## 2410 Rail Yard Ale (2009)      84 0.052  NA        425 American Amber / Red Ale     12 Wynkoop Brewing Company Denver
+##      State
+## 2406    CO
+## 2407    CO
+## 2408    CO
+## 2409    CO
+## 2410    CO</code></pre>
 </div>
 <div id="question-3" class="section level2">
 <h2>Question 3:</h2>
@@ -950,45 +929,37 @@ beer_brewery_merged_df %&gt;% ggplot(aes(y = ABV,
   ggtitle(&quot;Boxplot of ABV by Beer Type&quot;)</code></pre>
 <p><img src="Beer_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
 <pre class="r"><code>summary(beer_brewery_merged_df) # display summary statistic of data</code></pre>
-<pre><code>##                   Beer_Name       Beer_ID            ABV         
-##  Nonstop Hef Hop       :  12   Min.   :   1.0   Min.   :0.00100  
-##  Dale&#39;s Pale Ale       :   6   1st Qu.: 827.8   1st Qu.:0.05000  
-##  Oktoberfest           :   6   Median :1463.5   Median :0.05600  
-##  Longboard Island Lager:   4   Mean   :1439.4   Mean   :0.05977  
-##  1327 Pod&#39;s ESB        :   3   3rd Qu.:2078.2   3rd Qu.:0.06700  
-##  Boston Lager          :   3   Max.   :2692.0   Max.   :0.12800  
-##  (Other)               :2314                                     
-##       IBU           Brewery_id                               Style     
-##  Min.   :  0.00   Min.   :  1.0   American IPA                  : 417  
-##  1st Qu.:  0.00   1st Qu.: 94.0   American Pale Ale (APA)       : 239  
-##  Median : 18.00   Median :206.0   American Amber / Red Ale      : 125  
-##  Mean   : 25.56   Mean   :231.3   American Blonde Ale           : 104  
-##  3rd Qu.: 42.00   3rd Qu.:366.0   American Double / Imperial IPA: 103  
-##  Max.   :138.00   Max.   :558.0   American Pale Wheat Ale       :  95  
-##                                   (Other)                       :1265  
-##   Ounces                         Brewery_Name      City          
-##  8.4 :   1   Brewery Vivant            :  60   Length:2348       
-##  12  :1484   Oskar Blues Brewery       :  42   Class :character  
-##  16  : 821   Sun King Brewing Company  :  36   Mode  :character  
-##  16.9:   1   Cigar City Brewing Company:  25                     
-##  19.2:  15   Sixpoint Craft Ales       :  24                     
-##  24  :  22   Hopworks Urban Brewery    :  23                     
-##  32  :   4   (Other)                   :2138                     
-##      State       Beer_Type        
-##   CO    : 250   Length:2348       
-##   CA    : 182   Class :character  
-##   MI    : 151   Mode  :character  
-##   IN    : 137                     
-##   OR    : 125                     
-##   TX    : 124                     
-##  (Other):1379</code></pre>
+<pre><code>##                   Beer_Name       Beer_ID            ABV               IBU           Brewery_id   
+##  Nonstop Hef Hop       :  12   Min.   :   1.0   Min.   :0.00100   Min.   :  0.00   Min.   :  1.0  
+##  Dale&#39;s Pale Ale       :   6   1st Qu.: 827.8   1st Qu.:0.05000   1st Qu.:  0.00   1st Qu.: 94.0  
+##  Oktoberfest           :   6   Median :1463.5   Median :0.05600   Median : 18.00   Median :206.0  
+##  Longboard Island Lager:   4   Mean   :1439.4   Mean   :0.05977   Mean   : 25.56   Mean   :231.3  
+##  1327 Pod&#39;s ESB        :   3   3rd Qu.:2078.2   3rd Qu.:0.06700   3rd Qu.: 42.00   3rd Qu.:366.0  
+##  Boston Lager          :   3   Max.   :2692.0   Max.   :0.12800   Max.   :138.00   Max.   :558.0  
+##  (Other)               :2314                                                                      
+##                             Style       Ounces                         Brewery_Name      City               State     
+##  American IPA                  : 417   8.4 :   1   Brewery Vivant            :  60   Length:2348         CO    : 250  
+##  American Pale Ale (APA)       : 239   12  :1484   Oskar Blues Brewery       :  42   Class :character    CA    : 182  
+##  American Amber / Red Ale      : 125   16  : 821   Sun King Brewing Company  :  36   Mode  :character    MI    : 151  
+##  American Blonde Ale           : 104   16.9:   1   Cigar City Brewing Company:  25                       IN    : 137  
+##  American Double / Imperial IPA: 103   19.2:  15   Sixpoint Craft Ales       :  24                       OR    : 125  
+##  American Pale Wheat Ale       :  95   24  :  22   Hopworks Urban Brewery    :  23                       TX    : 124  
+##  (Other)                       :1265   32  :   4   (Other)                   :2138                      (Other):1379  
+##   Beer_Type        
+##  Length:2348       
+##  Class :character  
+##  Mode  :character  
+##                    
+##                    
+##                    
+## </code></pre>
 <pre class="r"><code>plot_intro(beer_brewery_merged_df) # metrics display using DataExplorer package</code></pre>
 <p><img src="Beer_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
 <pre class="r"><code>introduce(beer_brewery_merged_df) # Describe basic information in input data class like: # of col , # rows etc. </code></pre>
-<pre><code>##   rows columns discrete_columns continuous_columns all_missing_columns
-## 1 2348      11                7                  4                   0
-##   total_missing_values complete_rows total_observations memory_usage
-## 1                    0          2348              25828       415840</code></pre>
+<pre><code>##   rows columns discrete_columns continuous_columns all_missing_columns total_missing_values complete_rows
+## 1 2348      11                7                  4                   0                    0          2348
+##   total_observations memory_usage
+## 1              25828       415840</code></pre>
 </div>
 <div id="question-7" class="section level2">
 <h2>Question 7:</h2>
@@ -1044,10 +1015,28 @@ summary(mod) # display summary statistic of our mod</code></pre>
 beer_brewery_merged_df %&gt;% na.omit() %&gt;%
   select(ABV, IBU, Ounces, Beer_Type) %&gt;%
   ggpairs(mapping = aes(color = &quot;ABV&quot;))</code></pre>
-<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## 
+ plot: [1,1] [=====&gt;------------------------------------------------------------------------------------]  6% est: 0s 
+ plot: [1,2] [==========&gt;-------------------------------------------------------------------------------] 12% est: 1s 
+ plot: [1,3] [================&gt;-------------------------------------------------------------------------] 19% est: 1s 
+ plot: [1,4] [=====================&gt;--------------------------------------------------------------------] 25% est: 1s 
+ plot: [2,1] [===========================&gt;--------------------------------------------------------------] 31% est: 1s 
+ plot: [2,2] [=================================&gt;--------------------------------------------------------] 38% est: 1s 
+ plot: [2,3] [======================================&gt;---------------------------------------------------] 44% est: 1s 
+ plot: [2,4] [============================================&gt;---------------------------------------------] 50% est: 1s 
+ plot: [3,1] [==================================================&gt;---------------------------------------] 56% est: 1s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## 
+ plot: [3,2] [=======================================================&gt;----------------------------------] 62% est: 1s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## 
+ plot: [3,3] [=============================================================&gt;----------------------------] 69% est: 1s 
+ plot: [3,4] [===================================================================&gt;----------------------] 75% est: 1s 
+ plot: [4,1] [========================================================================&gt;-----------------] 81% est: 0s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## 
+ plot: [4,2] [==============================================================================&gt;-----------] 88% est: 0s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## 
+ plot: [4,3] [===================================================================================&gt;------] 94% est: 0s 
+ plot: [4,4] [==========================================================================================]100% est: 0s 
+                                                                                                                      </code></pre>
 <p><img src="Beer_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
 </div>
 <div id="question-8" class="section level2">

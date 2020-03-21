@@ -119,7 +119,7 @@ theme_set(theme_classic())
 
 ## Load Data
 ```{r}
-setwd("C:/Users/thads/OneDrive/SMU Data Science/DS6306/DDS6306-Group-Project-1")
+setwd("D:/GitHubRepo/tschwebke.github.io")
 
 beers_df <- read.csv(file.choose())
 breweries_df <-
