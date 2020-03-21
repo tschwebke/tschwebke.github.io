@@ -1,0 +1,12 @@
+name: Beer
+title: Beer
+username:
+account: tschwebke
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1975466
+bundleId: 2906476
+url: https://tschwebke.shinyapps.io/Beer/
+when: 1584825808.28729
+asMultiple: FALSE
+asStatic: FALSE
