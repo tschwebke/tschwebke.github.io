@@ -1,5 +1,5 @@
 ---
-title: "My Website"
+title: "Home"
 author: "Thad Schwebke"
 date: "3/21/2020"
 output: html_document
