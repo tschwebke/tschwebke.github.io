@@ -4,7 +4,5 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "Beer Shiny"
-      href: beer_shiny.html
     - text: "About"
       href: about.html

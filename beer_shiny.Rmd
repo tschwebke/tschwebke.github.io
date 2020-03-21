@@ -5,39 +5,7 @@ date: "3/21/2020"
 output: html_document
 runtime: shiny
 ---
-<style type="text/css">
 
-h1.title {
-  font-size: 38px;
-  color: Blue;
-  text-align: center;
-}
-h4.author { /* Header 4 - and the author and data headers use this too  */
-    font-size: 18px;
-  font-family: "Times New Roman", Times, serif;
-  color: Blue;
-  text-align: center;
-}
-h4.date { /* Header 4 - and the author and data headers use this too  */
-  font-size: 18px;
-  font-family: "Times New Roman", Times, serif;
-  color: Blue;
-  text-align: center;
-#header 
-    background: #2274cc; /* Old browsers */
-    background: -moz-linear-gradient(left, #2274cc 0%, #26c5d3 36%, #61bf61 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(left, #2274cc 0%,#26c5d3 36%,#61bf61 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to right, #2274cc 0%,#26c5d3 36%,#61bf61 100%); /* W3C, IE10+, FF16+, Chrome26+,  Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2274cc', endColorstr='#61bf61',GradientType=1 ); /* IE6-9 */
-    color: white;
-    height: 100px;
-    display:flex;
-    align-items: center;
-    justify-content: center;
-  }
-</style>
-<br>
-<br>
 
 ```{r, include=FALSE}
 library(tidyverse)

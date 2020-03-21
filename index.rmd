@@ -5,6 +5,8 @@ date: "3/21/2020"
 output: html_document
 ---
 
+[Beer Shiny App]:https://tschwebke.shinyapps.io/Beer/
+
 ## Instructions 
 You can assume that your audience is the CEO and CFO of Budweiser (your client) and that they only have had one class in statistics and have indicated that you cannot take more than 7 minutes of their time. 20% of your grade will be based on the presentation. 
 
