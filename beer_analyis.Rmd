@@ -120,30 +120,6 @@ theme_set(theme_classic())
 beers_df <- read.csv("D:/GitHubRepo/tschwebke.github.io/data/Beers.csv")
 breweries_df <-
   read.csv("D:/GitHubRepo/tschwebke.github.io/data/Breweries.csv") 
-```
-
-## Inspect the data
-```{r}
-#View(beers_df) # view the complete dataframe
-names(beers_df) # view the variable names
-dim(beers_df) # view the dimensions of the data
-str(beers_df) # view the structure of the data
-head(beers_df, n = 5) # view the first 5 records
-tail(beers_df, n = 5) # view the last 5 records
-summary(beers_df) # view basic model data i.e. min, max, mdedium, mean, etc.
-plot_missing(beers_df) #shows missing values using package DataExplorer
-
-
-
-names(breweries_df) # view the variable names
-dim(breweries_df) # view the dimensions of the data
-str(breweries_df) # view the structure of the data
-head(breweries_df, n = 5) # view the first 5 records
-tail(breweries_df, n = 5) # view the last 5 records
-summary(breweries_df) # view basic model data i.e. min, max, mdedium, mean, etc.
-plot_missing(breweries_df) #shows missing values using package DataExplorer
-
-
 brewery_dupes <-
   as.character(breweries_df[which(duplicated(as.character(breweries_df$Name))), "Name"]) # Check for duplicates  breweries names
 breweries_df %>% filter(Name == "Summit Brewing Company")  # Brew_ID, City (St. Paul, St Paul)
@@ -153,26 +129,31 @@ breweries_df$City <-
   str_replace_all(breweries_df$City, "St. Paul", "St Paul") ## sync spelling
 breweries_df$City <-
   str_replace_all(breweries_df$City, "Menominee", "Menominie") ## sync spelling
-```
 
-## Sanitize Variable Names In Data Sets
-```{r Santize Variables, message=FALSE, warning=FALSE}
-options(show.error.messages = FALSE)
-try(breweries_df <-
-      rename(breweries_df, Brewery_id = Brew_ID))
-# changed col or variable name to match both data set.
-try(breweries_df <-
-      rename(breweries_df, Brewery_Name = Name))
-#changed col or variable name
-try(beers_df <-
-      rename(beers_df, Beer_Name = Name))
-#changed col or variable name
-options(show.error.messages = TRUE)
+beer_brewery_merged_df <- merge(beers_df, breweries_df, by.x = "Brewery_id", by.y = "Brew_ID")
+beer_brewery_merged_df <-
+  beer_brewery_merged_df %>%  mutate(IBU = ifelse(is.na(IBU) |
+                                                    is.na(ABV), 0, IBU)) # replace all empty and NA value by zero. 
+# code added to drop ABV NA's
+beer_brewery_merged_df <- beer_brewery_merged_df %>% drop_na(ABV)
 ```
 
 ## Get mapping information
 ```{r}
 states_df <- map_data("state") # get US states and their coordinates
+brewery_states_df <-
+  breweries_df %>% group_by(State) %>% distinct(Brew_ID) # grouping by State using dplyr package
+brewery_count <- aggregate(Brew_ID ~ State, breweries_df, length)
+names(brewery_count) <-
+  c("State", "Breweries") # replace the col names
+
+brewery_count$State <-
+  trim(brewery_count$State, recode.factor = TRUE) # trim white spaces
+brewery_count$region <-
+  tolower(abbr2state(brewery_count$State)) # change all region to lower case
+
+brewery_map_df <-
+  left_join(states_df, brewery_count, by = "region") # merge state_df and brewery count by region to plot all the state in us map.
 ```
 
 ## Question 1: 
