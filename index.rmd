@@ -11,7 +11,7 @@ You can assume that your audience is the CEO and CFO of Budweiser (your client) 
 They have hired you to address the 9 questions / items described in the next section. Beyond those general questions you may and should speculate / anticipate what may be of interest to them.  
 
 ## Deliverables
-A.  A GitHub repository (Due Saturday March 7th 11:59pm CST 
+A.  A GitHub repository (Due Saturday March 7th 11:59pm CST)
 
 The GitHub repo should contain the following items and a link to the GitHub repo should be placed on a Word Doc (or PDF) and submitted to 2DS for Unit 8.  
 
