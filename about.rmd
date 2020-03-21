@@ -5,4 +5,44 @@ date: "3/21/2020"
 output: html_document
 ---
 
-More about this website.
+![Me](pic.jfif)
+
+# Thad Schwebke
+![LinkedIn Profile](www.linkedin.com/in/thadschwebke)
+Sr Support Planner at Microsoft
+Dallas/Fort Worth Area
+
+## About
+Experienced Senior Support Planner with a demonstrated history of
+working in the computer software industry. Skilled in Search Engine
+Optimization (SEO), IT Strategy, Data Warehousing, PowerPivot,
+PowerBI, and C#.
+
+## Experience
+### Microsoft
+11 years 7 months
+Senior Support Planner - Tools, Online, and Processes
+July 2013 - Present (6 years 9 months)
+Las Colinas, Texas
+
+Microsoft Customer Support and Services’ mission is to empower our customers and partners as they realize their full potential in a mobile-first, cloud-first world. CSS Partner Enablement organization is focusing on helping Microsoft 300K Partners globally to build and grow their cloud practices faster. Our core priorities are simplifying partner onboarding experience, accelerating
+partner sales and deployment, and increasing partner adoption of cloud solutions through partner-centric resources. CSS Partner Enablement Global Capability team builds capabilities, delivers services and insights to enable our delivery team to help partners to accelerate their digital transformation.
+
+## Education
+### Southern Methodist University
+Master of Science in Data Science, Machine Learning · (2019 - 2021)
+
+### Walden University
+MS in Information Technology, Software Engineering · (2016 - 2018)
+
+### University of Phoenix
+Bachelor’s Degree, Computer Science · (1996 - 2000)
+
+
+## Patent
+### System and method for auditing a network
+Patent dateIssued Jan 27, 2009  Patent issuer and numberus 7,483,898
+
+Patent descriptionA network is audited by running task programs and evaluating the results of the task programs. Task programs are tools that are configured to retrieve information about a particular network device. A service is arranged to coordinate the scheduling, execution, and data collection and aggregation of each task program over disparate networks such as multiple domains. Each task program executes at a scheduled time and provides results to a parser. The parser formats the results and provides the formatted data to the service. The service stores the collected data in a database. A client can schedule and/or review the results of audits by communicating with the service. The collected data can be compared and filtered according to rule-based templates that define acceptable network device configurations. Reports can be generated based on the templates such that a client can evaluate results from task programs executed over the entire network.
+
+The other tabs represent work / analyses that I have completed.  ![Please check them out!](beer.html)
