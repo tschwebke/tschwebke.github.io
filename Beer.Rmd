@@ -1,10 +1,8 @@
 ---
-title:"Case Study 01"
-author:"Thad Schwebke, Kris Ghimire, Rajesh Satluri"
-date:"2/18/2020"
-output:html_document:toc:yes
-word_document:default
-pdf_document:default
+title: "Beer Study"
+author: "Thad Schwebke"
+date: "3/21/2020"
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -119,11 +117,9 @@ theme_set(theme_classic())
 
 ## Load Data
 ```{r}
-setwd("D:/GitHubRepo/tschwebke.github.io")
-
-beers_df <- read.csv(file.choose())
+beers_df <- read.csv("D:/GitHubRepo/tschwebke.github.io/data/Beers.csv")
 breweries_df <-
-  read.csv(file.choose()) #store breweries data under breweries_df dataframe
+  read.csv("D:/GitHubRepo/tschwebke.github.io/data/Breweries.csv") 
 ```
 
 ## Inspect the data

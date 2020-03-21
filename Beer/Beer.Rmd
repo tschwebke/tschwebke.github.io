@@ -1,0 +1,204 @@
+---
+title: "Beer Shiny"
+author: "Thad Schwebke"
+date: "3/21/2020"
+output: html_document
+runtime: shiny
+---
+<style type="text/css">
+
+h1.title {
+  font-size: 38px;
+  color: Blue;
+  text-align: center;
+}
+h4.author { /* Header 4 - and the author and data headers use this too  */
+    font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: Blue;
+  text-align: center;
+}
+h4.date { /* Header 4 - and the author and data headers use this too  */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: Blue;
+  text-align: center;
+#header 
+    background: #2274cc; /* Old browsers */
+    background: -moz-linear-gradient(left, #2274cc 0%, #26c5d3 36%, #61bf61 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, #2274cc 0%,#26c5d3 36%,#61bf61 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, #2274cc 0%,#26c5d3 36%,#61bf61 100%); /* W3C, IE10+, FF16+, Chrome26+,  Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2274cc', endColorstr='#61bf61',GradientType=1 ); /* IE6-9 */
+    color: white;
+    height: 100px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+<br>
+<br>
+
+```{r, include=FALSE}
+library(tidyverse)
+library(plotly)
+library(plyr)
+library(dplyr)
+library(maps)
+library(inspectdf)
+library(VIM)
+library(ggthemes)
+library(GGally)
+library(prettydoc)
+library(treemap)
+library(gridExtra)
+library(stringr)
+library(tm)
+library(knitr)
+library(sqldf)
+library(dataMaid)
+library(class)
+library(e1071)
+library(caret)
+library(shiny)
+```
+
+```{r}
+beers_df <- read.csv("D:/GitHubRepo/tschwebke.github.io/data/Beers.csv")
+breweries_df <-
+  read.csv("D:/GitHubRepo/tschwebke.github.io/data/Breweries.csv") 
+brewery_dupes <-
+  as.character(breweries_df[which(duplicated(as.character(breweries_df$Name))), "Name"]) # Check for duplicates  breweries names
+breweries_df %>% filter(Name == "Summit Brewing Company")  # Brew_ID, City (St. Paul, St Paul)
+breweries_df %>% filter(Name == "Lucette Brewing Company") # Brew_ID, City (Menominee, Menominie)
+
+breweries_df$City <-
+  str_replace_all(breweries_df$City, "St. Paul", "St Paul") ## sync spelling
+breweries_df$City <-
+  str_replace_all(breweries_df$City, "Menominee", "Menominie") ## sync spelling
+
+beer_brewery_merged_df <- merge(beers_df, breweries_df, by.x = "Brewery_id", by.y = "Brew_ID")
+beer_brewery_merged_df <-
+  beer_brewery_merged_df %>%  mutate(IBU = ifelse(is.na(IBU) |
+                                                    is.na(ABV), 0, IBU)) # replace all empty and NA value by zero. 
+# code added to drop ABV NA's
+beer_brewery_merged_df <- beer_brewery_merged_df %>% drop_na(ABV)
+```
+
+```{r}
+states_df <- map_data("state") # get US states and their coordinates
+brewery_states_df <-
+  breweries_df %>% group_by(State) %>% distinct(Brew_ID) # grouping by State using dplyr package
+brewery_count <- aggregate(Brew_ID ~ State, breweries_df, length)
+names(brewery_count) <-
+  c("State", "Breweries") # replace the col names
+
+brewery_count$State <-
+  trim(brewery_count$State, recode.factor = TRUE) # trim white spaces
+brewery_count$region <-
+  tolower(abbr2state(brewery_count$State)) # change all region to lower case
+
+brewery_map_df <-
+  left_join(states_df, brewery_count, by = "region") # merge state_df and brewery count by region to plot all the state in us map.
+```
+
+```{r echo=FALSE}
+ui <- fluidPage(# Application title
+  sidebarLayout(
+    sidebarPanel(
+      # Select state
+      selectInput("inState", "Select state to show plot", choices = beer_brewery_merged_df$State),
+      
+      # Select plots
+      selectInput(
+        "select",
+        "Select plot type",
+        choices = c("Histogram", "Boxplot", "Scatterplot")
+      ),
+      
+      # Select regression line in scatterplot
+      selectInput("selectline", "Add a regression line?", choices = c("Yes", "No"))
+    ),
+    
+    # Show a plot of the generated distribution
+    mainPanel(tabsetPanel(
+      tabPanel("Plot",
+               fluidRow(
+                 splitLayout(
+                   cellWidths = "400px",
+                   plotOutput("distPlot1", height = "300px", width = "450px"),
+                   plotOutput("distPlot2", height = "300px", width = "450px"),
+                   column(width = 10)
+                 )
+               )),
+      tabPanel("Raw Data", tableOutput("BeerData"))
+    ))
+  ))
+
+server <- function(input, output) {
+  # Output Beer data table
+  output$BeerData <- renderTable({
+    stateFilter <-
+      subset(beer_brewery_merged_df,
+             beer_brewery_merged_df$State == input$inState)
+  })
+  # output Beer plots
+  output$distPlot1 <- renderPlot({
+    stateFilter <-
+      subset(beer_brewery_merged_df,
+             beer_brewery_merged_df$State == input$inState)
+    if (input$select == "Histogram") {
+      stateFilter %>% ggplot(aes(x = ABV)) + geom_histogram(fill = "blue", color =
+                                                              "white") + ggtitle("Histogram ABV")
+    }
+    else
+      if (input$select == "Boxplot")
+      {
+        stateFilter %>% ggplot(aes(y = ABV, fill = as.factor(Ounces))) + geom_boxplot() +
+          xlab("Beer Types") + ylab("ABV") + ggtitle("Boxplot of ABV vs Beer Types")
+      }
+    else
+      if (input$select == "Scatterplot")
+      {
+        if (input$selectline == "Yes")
+        {
+          p1 <-
+            stateFilter %>% ggplot(aes(x = ABV, y = IBU)) + geom_point(aes(color =
+                                                                             State),
+                                                                       size = 1,
+                                                                       position = "jitter") +
+            geom_smooth(method = lm) + ggtitle("Scatterplot: IBU vs ABV with regression line")
+          grid.arrange(p1, ncol = 1, widths = c(4))
+        }
+        else
+          if (input$selectline == "No")
+          {
+            stateFilter %>% ggplot(aes(x = ABV, y = IBU)) + geom_point(aes(color = State),
+                                                                       size =
+                                                                         1,
+                                                                       position = "jitter") +
+              ggtitle("Scatterplot: IBU vs ABV no regression line")
+          }
+      }
+  })
+  
+  output$distPlot2 <- renderPlot({
+    stateFilter <-
+      subset(beer_brewery_merged_df,
+             beer_brewery_merged_df$State == input$inState)
+    if (input$select == "Histogram")
+    {
+      stateFilter %>% ggplot(aes(x = IBU)) + geom_histogram(fill = "orange", color  =
+                                                              
+                                                              "black") + ggtitle("Histogram IBU")
+    }
+    else
+      if (input$select == "Boxplot")
+      {
+        stateFilter %>% ggplot(aes(y = IBU, fill = as.factor(Ounces))) + geom_boxplot() +
+          xlab("Ale Types (IPA or ALE)") + ylab("IBU") + ggtitle("Boxplot of IBU vs Ale Type")
+      }
+  })
+}
+shinyApp(ui, server)
+```

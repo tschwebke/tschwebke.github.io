@@ -9,9 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Thad Schwebke" />
 
 
-<title>Beer.utf8</title>
+<title>Beer Study</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -267,7 +268,7 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">My Website</a>
+      <a class="navbar-brand" href="index.html">Thad Schwebke</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -292,6 +293,9 @@ $(document).ready(function () {
 
 
 
+<h1 class="title toc-ignore">Beer Study</h1>
+<h4 class="author">Thad Schwebke</h4>
+<h4 class="date">3/21/2020</h4>
 
 </div>
 
@@ -405,17 +409,16 @@ library(ggthemes)# used for adding some extra themes, geoms, and scales for &#39
 </div>
 <div id="load-data" class="section level2">
 <h2>Load Data</h2>
-<pre class="r"><code>setwd(&quot;C:/Users/thads/OneDrive/SMU Data Science/DS6306/DDS6306-Group-Project-1&quot;)
-
-beers_df &lt;- read.csv(file.choose())
+<pre class="r"><code>beers_df &lt;- read.csv(&quot;D:/GitHubRepo/tschwebke.github.io/data/Beers.csv&quot;)
 breweries_df &lt;-
-  read.csv(file.choose()) #store breweries data under breweries_df dataframe</code></pre>
+  read.csv(&quot;D:/GitHubRepo/tschwebke.github.io/data/Breweries.csv&quot;) </code></pre>
 </div>
 <div id="inspect-the-data" class="section level2">
 <h2>Inspect the data</h2>
 <pre class="r"><code>#View(beers_df) # view the complete dataframe
 names(beers_df) # view the variable names</code></pre>
-<pre><code>## [1] &quot;Name&quot;       &quot;Beer_ID&quot;    &quot;ABV&quot;        &quot;IBU&quot;        &quot;Brewery_id&quot; &quot;Style&quot;      &quot;Ounces&quot;</code></pre>
+<pre><code>## [1] &quot;Name&quot;       &quot;Beer_ID&quot;    &quot;ABV&quot;        &quot;IBU&quot;        &quot;Brewery_id&quot;
+## [6] &quot;Style&quot;      &quot;Ounces&quot;</code></pre>
 <pre class="r"><code>dim(beers_df) # view the dimensions of the data</code></pre>
 <pre><code>## [1] 2410    7</code></pre>
 <pre class="r"><code>str(beers_df) # view the structure of the data</code></pre>
@@ -428,38 +431,58 @@ names(beers_df) # view the variable names</code></pre>
 ##  $ Style     : Factor w/ 100 levels &quot;&quot;,&quot;Abbey Single Ale&quot;,..: 19 18 16 12 16 80 18 22 18 12 ...
 ##  $ Ounces    : num  12 12 12 12 12 12 12 12 12 12 ...</code></pre>
 <pre class="r"><code>head(beers_df, n = 5) # view the first 5 records</code></pre>
-<pre><code>##                  Name Beer_ID   ABV IBU Brewery_id                          Style Ounces
-## 1            Pub Beer    1436 0.050  NA        409            American Pale Lager     12
-## 2         Devil&#39;s Cup    2265 0.066  NA        178        American Pale Ale (APA)     12
-## 3 Rise of the Phoenix    2264 0.071  NA        178                   American IPA     12
-## 4            Sinister    2263 0.090  NA        178 American Double / Imperial IPA     12
-## 5       Sex and Candy    2262 0.075  NA        178                   American IPA     12</code></pre>
+<pre><code>##                  Name Beer_ID   ABV IBU Brewery_id
+## 1            Pub Beer    1436 0.050  NA        409
+## 2         Devil&#39;s Cup    2265 0.066  NA        178
+## 3 Rise of the Phoenix    2264 0.071  NA        178
+## 4            Sinister    2263 0.090  NA        178
+## 5       Sex and Candy    2262 0.075  NA        178
+##                            Style Ounces
+## 1            American Pale Lager     12
+## 2        American Pale Ale (APA)     12
+## 3                   American IPA     12
+## 4 American Double / Imperial IPA     12
+## 5                   American IPA     12</code></pre>
 <pre class="r"><code>tail(beers_df, n = 5) # view the last 5 records</code></pre>
-<pre><code>##                      Name Beer_ID   ABV IBU Brewery_id                    Style Ounces
-## 2406            Belgorado     928 0.067  45        425              Belgian IPA     12
-## 2407        Rail Yard Ale     807 0.052  NA        425 American Amber / Red Ale     12
-## 2408      B3K Black Lager     620 0.055  NA        425              Schwarzbier     12
-## 2409  Silverback Pale Ale     145 0.055  40        425  American Pale Ale (APA)     12
-## 2410 Rail Yard Ale (2009)      84 0.052  NA        425 American Amber / Red Ale     12</code></pre>
+<pre><code>##                      Name Beer_ID   ABV IBU Brewery_id                    Style
+## 2406            Belgorado     928 0.067  45        425              Belgian IPA
+## 2407        Rail Yard Ale     807 0.052  NA        425 American Amber / Red Ale
+## 2408      B3K Black Lager     620 0.055  NA        425              Schwarzbier
+## 2409  Silverback Pale Ale     145 0.055  40        425  American Pale Ale (APA)
+## 2410 Rail Yard Ale (2009)      84 0.052  NA        425 American Amber / Red Ale
+##      Ounces
+## 2406     12
+## 2407     12
+## 2408     12
+## 2409     12
+## 2410     12</code></pre>
 <pre class="r"><code>summary(beers_df) # view basic model data i.e. min, max, mdedium, mean, etc.</code></pre>
-<pre><code>##                      Name         Beer_ID            ABV               IBU           Brewery_id   
-##  Nonstop Hef Hop       :  12   Min.   :   1.0   Min.   :0.00100   Min.   :  4.00   Min.   :  1.0  
-##  Dale&#39;s Pale Ale       :   6   1st Qu.: 808.2   1st Qu.:0.05000   1st Qu.: 21.00   1st Qu.: 94.0  
-##  Oktoberfest           :   6   Median :1453.5   Median :0.05600   Median : 35.00   Median :206.0  
-##  Longboard Island Lager:   4   Mean   :1431.1   Mean   :0.05977   Mean   : 42.71   Mean   :232.7  
-##  1327 Pod&#39;s ESB        :   3   3rd Qu.:2075.8   3rd Qu.:0.06700   3rd Qu.: 64.00   3rd Qu.:367.0  
-##  Boston Lager          :   3   Max.   :2692.0   Max.   :0.12800   Max.   :138.00   Max.   :558.0  
-##  (Other)               :2376                    NA&#39;s   :62        NA&#39;s   :1005                    
-##                             Style          Ounces     
-##  American IPA                  : 424   Min.   : 8.40  
-##  American Pale Ale (APA)       : 245   1st Qu.:12.00  
-##  American Amber / Red Ale      : 133   Median :12.00  
-##  American Blonde Ale           : 108   Mean   :13.59  
-##  American Double / Imperial IPA: 105   3rd Qu.:16.00  
-##  American Pale Wheat Ale       :  97   Max.   :32.00  
-##  (Other)                       :1298</code></pre>
+<pre><code>##                      Name         Beer_ID            ABV         
+##  Nonstop Hef Hop       :  12   Min.   :   1.0   Min.   :0.00100  
+##  Dale&#39;s Pale Ale       :   6   1st Qu.: 808.2   1st Qu.:0.05000  
+##  Oktoberfest           :   6   Median :1453.5   Median :0.05600  
+##  Longboard Island Lager:   4   Mean   :1431.1   Mean   :0.05977  
+##  1327 Pod&#39;s ESB        :   3   3rd Qu.:2075.8   3rd Qu.:0.06700  
+##  Boston Lager          :   3   Max.   :2692.0   Max.   :0.12800  
+##  (Other)               :2376                    NA&#39;s   :62       
+##       IBU           Brewery_id                               Style     
+##  Min.   :  4.00   Min.   :  1.0   American IPA                  : 424  
+##  1st Qu.: 21.00   1st Qu.: 94.0   American Pale Ale (APA)       : 245  
+##  Median : 35.00   Median :206.0   American Amber / Red Ale      : 133  
+##  Mean   : 42.71   Mean   :232.7   American Blonde Ale           : 108  
+##  3rd Qu.: 64.00   3rd Qu.:367.0   American Double / Imperial IPA: 105  
+##  Max.   :138.00   Max.   :558.0   American Pale Wheat Ale       :  97  
+##  NA&#39;s   :1005                     (Other)                       :1298  
+##      Ounces     
+##  Min.   : 8.40  
+##  1st Qu.:12.00  
+##  Median :12.00  
+##  Mean   :13.59  
+##  3rd Qu.:16.00  
+##  Max.   :32.00  
+## </code></pre>
 <pre class="r"><code>plot_missing(beers_df) #shows missing values using package DataExplorer</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <pre class="r"><code>names(breweries_df) # view the variable names</code></pre>
 <pre><code>## [1] &quot;Brew_ID&quot; &quot;Name&quot;    &quot;City&quot;    &quot;State&quot;</code></pre>
 <pre class="r"><code>dim(breweries_df) # view the dimensions of the data</code></pre>
@@ -494,7 +517,7 @@ names(beers_df) # view the variable names</code></pre>
 ##  Max.   :558.0   Sly Fox Brewing Company:  2   Denver  :  8    PA    : 25  
 ##                  (Other)                :546   (Other) :498   (Other):358</code></pre>
 <pre class="r"><code>plot_missing(breweries_df) #shows missing values using package DataExplorer</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
 <pre class="r"><code>brewery_dupes &lt;-
   as.character(breweries_df[which(duplicated(as.character(breweries_df$Name))), &quot;Name&quot;]) # Check for duplicates  breweries names
 breweries_df %&gt;% filter(Name == &quot;Summit Brewing Company&quot;)  # Brew_ID, City (St. Paul, St Paul)</code></pre>
@@ -585,7 +608,7 @@ all.equal(state_center, as.data.frame(state_center_region))</code></pre>
     plot.title = element_text(face = &quot;bold&quot;,
                               hjust = 0.5)
   ) # element_black : remove x- axis, y-axis lines, labels, title. Formate legneds and plot text</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-4-1.png" width="960" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-4-1.png" width="960" /></p>
 </div>
 <div id="question-2" class="section level2">
 <h2>Question 2:</h2>
@@ -594,31 +617,31 @@ all.equal(state_center, as.data.frame(state_center_region))</code></pre>
 <pre class="r"><code>beer_brewery_merged_df &lt;-
   full_join(beers_df, breweries_df, by = &quot;Brewery_id&quot;) # merge by  full_join  using key word  Brewery_id
 head(beer_brewery_merged_df, n = 5) # view the first 5 records</code></pre>
-<pre><code>##             Beer_Name Beer_ID   ABV IBU Brewery_id                          Style Ounces              Brewery_Name City
-## 1            Pub Beer    1436 0.050  NA        409            American Pale Lager     12 10 Barrel Brewing Company Bend
-## 2         Devil&#39;s Cup    2265 0.066  NA        178        American Pale Ale (APA)     12       18th Street Brewery Gary
-## 3 Rise of the Phoenix    2264 0.071  NA        178                   American IPA     12       18th Street Brewery Gary
-## 4            Sinister    2263 0.090  NA        178 American Double / Imperial IPA     12       18th Street Brewery Gary
-## 5       Sex and Candy    2262 0.075  NA        178                   American IPA     12       18th Street Brewery Gary
-##   State
-## 1    OR
-## 2    IN
-## 3    IN
-## 4    IN
-## 5    IN</code></pre>
+<pre><code>##             Beer_Name Beer_ID   ABV IBU Brewery_id
+## 1            Pub Beer    1436 0.050  NA        409
+## 2         Devil&#39;s Cup    2265 0.066  NA        178
+## 3 Rise of the Phoenix    2264 0.071  NA        178
+## 4            Sinister    2263 0.090  NA        178
+## 5       Sex and Candy    2262 0.075  NA        178
+##                            Style Ounces              Brewery_Name City State
+## 1            American Pale Lager     12 10 Barrel Brewing Company Bend    OR
+## 2        American Pale Ale (APA)     12       18th Street Brewery Gary    IN
+## 3                   American IPA     12       18th Street Brewery Gary    IN
+## 4 American Double / Imperial IPA     12       18th Street Brewery Gary    IN
+## 5                   American IPA     12       18th Street Brewery Gary    IN</code></pre>
 <pre class="r"><code>tail(beer_brewery_merged_df, n = 5) # view the last 5 records</code></pre>
-<pre><code>##                 Beer_Name Beer_ID   ABV IBU Brewery_id                    Style Ounces            Brewery_Name   City
-## 2406            Belgorado     928 0.067  45        425              Belgian IPA     12 Wynkoop Brewing Company Denver
-## 2407        Rail Yard Ale     807 0.052  NA        425 American Amber / Red Ale     12 Wynkoop Brewing Company Denver
-## 2408      B3K Black Lager     620 0.055  NA        425              Schwarzbier     12 Wynkoop Brewing Company Denver
-## 2409  Silverback Pale Ale     145 0.055  40        425  American Pale Ale (APA)     12 Wynkoop Brewing Company Denver
-## 2410 Rail Yard Ale (2009)      84 0.052  NA        425 American Amber / Red Ale     12 Wynkoop Brewing Company Denver
-##      State
-## 2406    CO
-## 2407    CO
-## 2408    CO
-## 2409    CO
-## 2410    CO</code></pre>
+<pre><code>##                 Beer_Name Beer_ID   ABV IBU Brewery_id                    Style
+## 2406            Belgorado     928 0.067  45        425              Belgian IPA
+## 2407        Rail Yard Ale     807 0.052  NA        425 American Amber / Red Ale
+## 2408      B3K Black Lager     620 0.055  NA        425              Schwarzbier
+## 2409  Silverback Pale Ale     145 0.055  40        425  American Pale Ale (APA)
+## 2410 Rail Yard Ale (2009)      84 0.052  NA        425 American Amber / Red Ale
+##      Ounces            Brewery_Name   City State
+## 2406     12 Wynkoop Brewing Company Denver    CO
+## 2407     12 Wynkoop Brewing Company Denver    CO
+## 2408     12 Wynkoop Brewing Company Denver    CO
+## 2409     12 Wynkoop Brewing Company Denver    CO
+## 2410     12 Wynkoop Brewing Company Denver    CO</code></pre>
 </div>
 <div id="question-3" class="section level2">
 <h2>Question 3:</h2>
@@ -627,7 +650,7 @@ head(beer_brewery_merged_df, n = 5) # view the first 5 records</code></pre>
 <pre class="r"><code>plot_missing(beer_brewery_merged_df,
              title = &quot;Missing Value State Post Merge of Data Sets&quot;,
              ggtheme = theme_clean())</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <pre class="r"><code>#aggr(beer_brewery_merged_df, prop = FALSE, numbers = TRUE)
 beer_brewery_merged_df &lt;-
   beer_brewery_merged_df %&gt;%  mutate(IBU = ifelse(is.na(IBU) |
@@ -636,7 +659,7 @@ beer_brewery_merged_df &lt;-
 plot_missing(beer_brewery_merged_df,
              title = &quot;Missing Values State After Cleanup of IBU&quot;,
              ggtheme = theme_clean())</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
 <pre class="r"><code># code added to drop ABV NA&#39;s
 beer_brewery_merged_df &lt;- beer_brewery_merged_df %&gt;% drop_na(ABV)</code></pre>
 </div>
@@ -762,7 +785,7 @@ p2 &lt;-
   ) + labs(title = &quot;Median ABV&quot;)
 
 grid.arrange(p1, p2, ncol = 2) # puts the two graph side by side</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
 <div id="question-5" class="section level2">
 <h2>Question 5:</h2>
@@ -837,7 +860,7 @@ ggplot(ibu_top, aes(x = State, y = ibumax, fill = ibumax)) + geom_bar(
   ) +
   labs(x = &quot;State&quot;, y = &quot;IBU&quot;) +
   coord_flip() # flips the to horizontal form</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <pre class="r"><code>#plot top ten state representing IBU using treemap formate
 treemap(
   #A Treemap displays hierarchical data as a set of nested rectangles. Each state is represented by a rectangle, which area is proportional to its IBU value
@@ -852,7 +875,7 @@ treemap(
   title = &quot;States IBU&quot;,
   fontsize.title = 14 # treemap title font size
 )</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
 <pre class="r"><code># plot top ten state representing ABV using bar plot
 ggplot(abv_top, aes(x = State, y = abvmax, fill = abvmax)) + geom_bar(
   stat = &quot;identity&quot;,
@@ -872,7 +895,7 @@ ggplot(abv_top, aes(x = State, y = abvmax, fill = abvmax)) + geom_bar(
   ) +
   labs(x = &quot;State&quot;, y = &quot;ABV&quot;) +
   coord_flip()</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
 <pre class="r"><code>#plot top ten state representing ABV using treempa formate
 treemap(
   abv_max,
@@ -883,7 +906,7 @@ treemap(
   title = &quot;States ABV&quot;,
   fontsize.title = 14
 )</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-8-4.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-8-4.png" width="672" /></p>
 </div>
 <div id="question-6" class="section level2">
 <h2>Question 6:</h2>
@@ -912,7 +935,7 @@ beer_brewery_merged_df %&gt;% ggplot(aes(x = ABV)) + geom_histogram(
   na.rm = TRUE
 ) + theme(axis.text.y = element_text(size = rel(0.8), angle = 90)) +
   labs(x = NULL, y = &quot;ABV&quot;)</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <pre class="r"><code>##   Bloxplot showing the variation of ABV by ounce
 beer_brewery_merged_df$Ounces = as.factor(beer_brewery_merged_df$Ounces)
 beer_brewery_merged_df %&gt;% ggplot(aes(y = ABV,
@@ -920,46 +943,54 @@ beer_brewery_merged_df %&gt;% ggplot(aes(y = ABV,
   theme(axis.text.y = element_text(size = rel(0.8), angle = 90)) +
   labs(x = &quot;Ounces&quot;, y = &quot;ABV&quot;) +
   ggtitle(&quot;Boxplot of ABV by Ounces&quot;)</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
 <pre class="r"><code># box plot showing the variation of ABV for three types: Ale, IPA and other
 beer_brewery_merged_df %&gt;% ggplot(aes(y = ABV,
                                       x = Beer_Type, fill = Beer_Type)) + geom_boxplot(na.rm = TRUE) +
   theme(axis.text.y = element_text(size = rel(0.8), angle = 90)) +
   labs(x = &quot;Type&quot;, y = &quot;ABV&quot;) +
   ggtitle(&quot;Boxplot of ABV by Beer Type&quot;)</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
 <pre class="r"><code>summary(beer_brewery_merged_df) # display summary statistic of data</code></pre>
-<pre><code>##                   Beer_Name       Beer_ID            ABV               IBU           Brewery_id   
-##  Nonstop Hef Hop       :  12   Min.   :   1.0   Min.   :0.00100   Min.   :  0.00   Min.   :  1.0  
-##  Dale&#39;s Pale Ale       :   6   1st Qu.: 827.8   1st Qu.:0.05000   1st Qu.:  0.00   1st Qu.: 94.0  
-##  Oktoberfest           :   6   Median :1463.5   Median :0.05600   Median : 18.00   Median :206.0  
-##  Longboard Island Lager:   4   Mean   :1439.4   Mean   :0.05977   Mean   : 25.56   Mean   :231.3  
-##  1327 Pod&#39;s ESB        :   3   3rd Qu.:2078.2   3rd Qu.:0.06700   3rd Qu.: 42.00   3rd Qu.:366.0  
-##  Boston Lager          :   3   Max.   :2692.0   Max.   :0.12800   Max.   :138.00   Max.   :558.0  
-##  (Other)               :2314                                                                      
-##                             Style       Ounces                         Brewery_Name      City               State     
-##  American IPA                  : 417   8.4 :   1   Brewery Vivant            :  60   Length:2348         CO    : 250  
-##  American Pale Ale (APA)       : 239   12  :1484   Oskar Blues Brewery       :  42   Class :character    CA    : 182  
-##  American Amber / Red Ale      : 125   16  : 821   Sun King Brewing Company  :  36   Mode  :character    MI    : 151  
-##  American Blonde Ale           : 104   16.9:   1   Cigar City Brewing Company:  25                       IN    : 137  
-##  American Double / Imperial IPA: 103   19.2:  15   Sixpoint Craft Ales       :  24                       OR    : 125  
-##  American Pale Wheat Ale       :  95   24  :  22   Hopworks Urban Brewery    :  23                       TX    : 124  
-##  (Other)                       :1265   32  :   4   (Other)                   :2138                      (Other):1379  
-##   Beer_Type        
-##  Length:2348       
-##  Class :character  
-##  Mode  :character  
-##                    
-##                    
-##                    
-## </code></pre>
+<pre><code>##                   Beer_Name       Beer_ID            ABV         
+##  Nonstop Hef Hop       :  12   Min.   :   1.0   Min.   :0.00100  
+##  Dale&#39;s Pale Ale       :   6   1st Qu.: 827.8   1st Qu.:0.05000  
+##  Oktoberfest           :   6   Median :1463.5   Median :0.05600  
+##  Longboard Island Lager:   4   Mean   :1439.4   Mean   :0.05977  
+##  1327 Pod&#39;s ESB        :   3   3rd Qu.:2078.2   3rd Qu.:0.06700  
+##  Boston Lager          :   3   Max.   :2692.0   Max.   :0.12800  
+##  (Other)               :2314                                     
+##       IBU           Brewery_id                               Style     
+##  Min.   :  0.00   Min.   :  1.0   American IPA                  : 417  
+##  1st Qu.:  0.00   1st Qu.: 94.0   American Pale Ale (APA)       : 239  
+##  Median : 18.00   Median :206.0   American Amber / Red Ale      : 125  
+##  Mean   : 25.56   Mean   :231.3   American Blonde Ale           : 104  
+##  3rd Qu.: 42.00   3rd Qu.:366.0   American Double / Imperial IPA: 103  
+##  Max.   :138.00   Max.   :558.0   American Pale Wheat Ale       :  95  
+##                                   (Other)                       :1265  
+##   Ounces                         Brewery_Name      City          
+##  8.4 :   1   Brewery Vivant            :  60   Length:2348       
+##  12  :1484   Oskar Blues Brewery       :  42   Class :character  
+##  16  : 821   Sun King Brewing Company  :  36   Mode  :character  
+##  16.9:   1   Cigar City Brewing Company:  25                     
+##  19.2:  15   Sixpoint Craft Ales       :  24                     
+##  24  :  22   Hopworks Urban Brewery    :  23                     
+##  32  :   4   (Other)                   :2138                     
+##      State       Beer_Type        
+##   CO    : 250   Length:2348       
+##   CA    : 182   Class :character  
+##   MI    : 151   Mode  :character  
+##   IN    : 137                     
+##   OR    : 125                     
+##   TX    : 124                     
+##  (Other):1379</code></pre>
 <pre class="r"><code>plot_intro(beer_brewery_merged_df) # metrics display using DataExplorer package</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
 <pre class="r"><code>introduce(beer_brewery_merged_df) # Describe basic information in input data class like: # of col , # rows etc. </code></pre>
-<pre><code>##   rows columns discrete_columns continuous_columns all_missing_columns total_missing_values complete_rows
-## 1 2348      11                7                  4                   0                    0          2348
-##   total_observations memory_usage
-## 1              25828       415840</code></pre>
+<pre><code>##   rows columns discrete_columns continuous_columns all_missing_columns
+## 1 2348      11                7                  4                   0
+##   total_missing_values complete_rows total_observations memory_usage
+## 1                    0          2348              25828       415840</code></pre>
 </div>
 <div id="question-7" class="section level2">
 <h2>Question 7:</h2>
@@ -976,7 +1007,7 @@ beer_brewery_merged_df %&gt;% na.omit() %&gt;% # use only data without NAs
         legend.position = &quot;none&quot;) +
   labs(x = &quot;ABV&quot;, y = &quot;IBU&quot;) +
   ggtitle(&quot;Relationship between IBU and ABV&quot;)</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <pre class="r"><code>#Pearson&#39;s correlation with original data
 cor.test(beer_brewery_merged_df$IBU, beer_brewery_merged_df$ABV)</code></pre>
 <pre><code>## 
@@ -1015,29 +1046,11 @@ summary(mod) # display summary statistic of our mod</code></pre>
 beer_brewery_merged_df %&gt;% na.omit() %&gt;%
   select(ABV, IBU, Ounces, Beer_Type) %&gt;%
   ggpairs(mapping = aes(color = &quot;ABV&quot;))</code></pre>
-<pre><code>## 
- plot: [1,1] [=====&gt;------------------------------------------------------------------------------------]  6% est: 0s 
- plot: [1,2] [==========&gt;-------------------------------------------------------------------------------] 12% est: 1s 
- plot: [1,3] [================&gt;-------------------------------------------------------------------------] 19% est: 1s 
- plot: [1,4] [=====================&gt;--------------------------------------------------------------------] 25% est: 1s 
- plot: [2,1] [===========================&gt;--------------------------------------------------------------] 31% est: 1s 
- plot: [2,2] [=================================&gt;--------------------------------------------------------] 38% est: 1s 
- plot: [2,3] [======================================&gt;---------------------------------------------------] 44% est: 1s 
- plot: [2,4] [============================================&gt;---------------------------------------------] 50% est: 1s 
- plot: [3,1] [==================================================&gt;---------------------------------------] 56% est: 1s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-## 
- plot: [3,2] [=======================================================&gt;----------------------------------] 62% est: 1s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-## 
- plot: [3,3] [=============================================================&gt;----------------------------] 69% est: 1s 
- plot: [3,4] [===================================================================&gt;----------------------] 75% est: 1s 
- plot: [4,1] [========================================================================&gt;-----------------] 81% est: 0s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-## 
- plot: [4,2] [==============================================================================&gt;-----------] 88% est: 0s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-## 
- plot: [4,3] [===================================================================================&gt;------] 94% est: 0s 
- plot: [4,4] [==========================================================================================]100% est: 0s 
-                                                                                                                      </code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="beer_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
 </div>
 <div id="question-8" class="section level2">
 <h2>Question 8</h2>
@@ -1144,9 +1157,9 @@ accuplot &lt;- ggplot(accu, aes(x = k, y = accuracy)) +
   geom_line() +
   labs(x = &quot;Tally&quot;, y = &quot;Accuracy&quot;)
 accuplot &lt;- plot(accuplot)</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <pre class="r"><code>accuplot</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-13-2.png" width="672" /></p>
+<p><img src="beer_files/figure-html/unnamed-chunk-13-2.png" width="672" /></p>
 </div>
 <div id="question-9" class="section level1">
 <h1>Question 9</h1>
@@ -1184,7 +1197,7 @@ market &lt;- g + geom_count(show.legend = F) +
     title = &quot;Large container consumption by State&quot;
   )
 market</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-14-1.png" width="672" /> Conclusion</p>
+<p><img src="beer_files/figure-html/unnamed-chunk-14-1.png" width="672" /> Conclusion</p>
 <p># DDS- Project-01 Summary:</p>
 <p>The primary objective of our project is to take two different dataset, beer data set containing a list of 2410 US crafts beers and breweries dataset containing 558 breweries an perform analysis. We transformed the data in CVS format into data frame using R-programming, inspected and analyzed the structure of the data, merged the two data frames, and performed analysis on the merged final data set.</p>
 <p>As Data Scientist, it is very rare that we get to work only on a single perfect data. A large percentage of work is to accept different datasets and merge them into one final data frame before processing as it is illustrated in our project. After analyzing the data, statistical inference is then made.</p>
