@@ -1,4 +1,4 @@
-name: "my-website"
+name: "My Website"
 navbar:
   title: "Thad Schwebke"
   left:
@@ -6,7 +6,5 @@ navbar:
       href: index.html
     - text: "Beer Shiny"
       href: beer_shiny.html
-    - text: "Beer Study"
-      href: beer_analysis.html
     - text: "About"
       href: about.html
