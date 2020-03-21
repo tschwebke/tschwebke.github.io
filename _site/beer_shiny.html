@@ -12,7 +12,7 @@
 <meta name="author" content="Thad Schwebke" />
 
 
-<title>About</title>
+<title>Beer Shiny</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -292,57 +292,88 @@ $(document).ready(function () {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div class="fluid-row" id="section-header">
 
 
 
-<h1 class="title toc-ignore">About</h1>
+<h1 class="title toc-ignore">Beer Shiny</h1>
 <h4 class="author">Thad Schwebke</h4>
 <h4 class="date">3/21/2020</h4>
 
 </div>
 
 
-<div id="thad-schwebke" class="section level1">
-<h1>Thad Schwebke</h1>
-<p>Sr Support Planner at Microsoft Dallas/Fort Worth Area</p>
-<div id="about" class="section level2">
-<h2>About</h2>
-<p>Experienced Senior Support Planner with a demonstrated history of working in the computer software industry. Skilled in Search Engine Optimization (SEO), IT Strategy, Data Warehousing, PowerPivot, PowerBI, and C#.</p>
-</div>
-<div id="experience" class="section level2">
-<h2>Experience</h2>
-<div id="microsoft" class="section level3">
-<h3>Microsoft</h3>
-<p>11 years 7 months Senior Support Planner - Tools, Online, and Processes July 2013 - Present (6 years 9 months) Las Colinas, Texas</p>
-<p>Microsoft Customer Support and Services’ mission is to empower our customers and partners as they realize their full potential in a mobile-first, cloud-first world. CSS Partner Enablement organization is focusing on helping Microsoft 300K Partners globally to build and grow their cloud practices faster. Our core priorities are simplifying partner onboarding experience, accelerating partner sales and deployment, and increasing partner adoption of cloud solutions through partner-centric resources. CSS Partner Enablement Global Capability team builds capabilities, delivers services and insights to enable our delivery team to help partners to accelerate their digital transformation.</p>
-</div>
-</div>
-<div id="education" class="section level2">
-<h2>Education</h2>
-<div id="southern-methodist-university" class="section level3">
-<h3>Southern Methodist University</h3>
-<p>Master of Science in Data Science, Machine Learning · (2019 - 2021)</p>
-</div>
-<div id="walden-university" class="section level3">
-<h3>Walden University</h3>
-<p>MS in Information Technology, Software Engineering · (2016 - 2018)</p>
-</div>
-<div id="university-of-phoenix" class="section level3">
-<h3>University of Phoenix</h3>
-<p>Bachelor’s Degree, Computer Science · (1996 - 2000)</p>
-</div>
-</div>
-<div id="patent" class="section level2">
-<h2>Patent</h2>
-<div id="system-and-method-for-auditing-a-network" class="section level3">
-<h3>System and method for auditing a network</h3>
-<p>Patent dateIssued Jan 27, 2009 Patent issuer and numberus 7,483,898</p>
-<p>Patent descriptionA network is audited by running task programs and evaluating the results of the task programs. Task programs are tools that are configured to retrieve information about a particular network device. A service is arranged to coordinate the scheduling, execution, and data collection and aggregation of each task program over disparate networks such as multiple domains. Each task program executes at a scheduled time and provides results to a parser. The parser formats the results and provides the formatted data to the service. The service stores the collected data in a database. A client can schedule and/or review the results of audits by communicating with the service. The collected data can be compared and filtered according to rule-based templates that define acceptable network device configurations. Reports can be generated based on the templates such that a client can evaluate results from task programs executed over the entire network.</p>
-<p>The other tabs represent work / analyses that I have completed. [Please check them out!]: beer.html</p>
-</div>
-</div>
-</div>
+<style type="text/css">
+
+h1.title {
+  font-size: 38px;
+  color: Blue;
+  text-align: center;
+}
+h4.author { /* Header 4 - and the author and data headers use this too  */
+    font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: Blue;
+  text-align: center;
+}
+h4.date { /* Header 4 - and the author and data headers use this too  */
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+  color: Blue;
+  text-align: center;
+#header 
+    background: #2274cc; /* Old browsers */
+    background: -moz-linear-gradient(left, #2274cc 0%, #26c5d3 36%, #61bf61 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left, #2274cc 0%,#26c5d3 36%,#61bf61 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right, #2274cc 0%,#26c5d3 36%,#61bf61 100%); /* W3C, IE10+, FF16+, Chrome26+,  Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2274cc', endColorstr='#61bf61',GradientType=1 ); /* IE6-9 */
+    color: white;
+    height: 100px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+<p><br> <br></p>
+<pre class="r"><code>beers_df &lt;- read.csv(&quot;D:/GitHubRepo/tschwebke.github.io/data/Beers.csv&quot;)
+breweries_df &lt;-
+  read.csv(&quot;D:/GitHubRepo/tschwebke.github.io/data/Breweries.csv&quot;) 
+brewery_dupes &lt;-
+  as.character(breweries_df[which(duplicated(as.character(breweries_df$Name))), &quot;Name&quot;]) # Check for duplicates  breweries names
+breweries_df %&gt;% filter(Name == &quot;Summit Brewing Company&quot;)  # Brew_ID, City (St. Paul, St Paul)</code></pre>
+<pre><code>##   Brew_ID                   Name     City State
+## 1      59 Summit Brewing Company St. Paul    MN
+## 2     139 Summit Brewing Company  St Paul    MN</code></pre>
+<pre class="r"><code>breweries_df %&gt;% filter(Name == &quot;Lucette Brewing Company&quot;) # Brew_ID, City (Menominee, Menominie)</code></pre>
+<pre><code>##   Brew_ID                    Name      City State
+## 1     378 Lucette Brewing Company Menominee    WI
+## 2     457 Lucette Brewing Company Menominie    WI</code></pre>
+<pre class="r"><code>breweries_df$City &lt;-
+  str_replace_all(breweries_df$City, &quot;St. Paul&quot;, &quot;St Paul&quot;) ## sync spelling
+breweries_df$City &lt;-
+  str_replace_all(breweries_df$City, &quot;Menominee&quot;, &quot;Menominie&quot;) ## sync spelling
+
+beer_brewery_merged_df &lt;- merge(beers_df, breweries_df, by.x = &quot;Brewery_id&quot;, by.y = &quot;Brew_ID&quot;)
+beer_brewery_merged_df &lt;-
+  beer_brewery_merged_df %&gt;%  mutate(IBU = ifelse(is.na(IBU) |
+                                                    is.na(ABV), 0, IBU)) # replace all empty and NA value by zero. 
+# code added to drop ABV NA&#39;s
+beer_brewery_merged_df &lt;- beer_brewery_merged_df %&gt;% drop_na(ABV)</code></pre>
+<pre class="r"><code>states_df &lt;- map_data(&quot;state&quot;) # get US states and their coordinates
+brewery_states_df &lt;-
+  breweries_df %&gt;% group_by(State) %&gt;% distinct(Brew_ID) # grouping by State using dplyr package
+brewery_count &lt;- aggregate(Brew_ID ~ State, breweries_df, length)
+names(brewery_count) &lt;-
+  c(&quot;State&quot;, &quot;Breweries&quot;) # replace the col names
+
+brewery_count$State &lt;-
+  trim(brewery_count$State, recode.factor = TRUE) # trim white spaces
+brewery_count$region &lt;-
+  tolower(abbr2state(brewery_count$State)) # change all region to lower case
+
+brewery_map_df &lt;-
+  left_join(states_df, brewery_count, by = &quot;region&quot;) # merge state_df and brewery count by region to plot all the state in us map.</code></pre>
+<iframe data-deferred-src="appdf7f323e43a0879d77b63b71ab07e320/?w=&amp;__subapp__=1" width="100%" height="400" class="shiny-frame shiny-frame-deferred"></iframe>
 
 
 
@@ -366,7 +397,7 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function () {
-  window.buildTabsets("TOC");
+  window.buildTabsets("section-TOC");
 });
 
 $(document).ready(function () {

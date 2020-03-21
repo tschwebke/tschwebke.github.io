@@ -11,7 +11,6 @@
 
 <meta name="author" content="Thad Schwebke" />
 
-<meta name="date" content="2020-03-21" />
 
 <title>Beer Study</title>
 
@@ -277,7 +276,10 @@ $(document).ready(function () {
   <a href="index.html">Home</a>
 </li>
 <li>
-  <a href="beer.html">Beer Study</a>
+  <a href="beer_shiny.html">Beer Shiny</a>
+</li>
+<li>
+  <a href="beer_analysis.html">Beer Study</a>
 </li>
 <li>
   <a href="about.html">About</a>
@@ -296,7 +298,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Beer Study</h1>
 <h4 class="author">Thad Schwebke</h4>
-<h4 class="date">03/21/2020</h4>
+<h4 class="date">3/21/2020</h4>
 
 </div>
 
@@ -462,7 +464,7 @@ names(beers_df) # view the variable names</code></pre>
 ##  American Pale Wheat Ale       :  97   Max.   :32.00  
 ##  (Other)                       :1298</code></pre>
 <pre class="r"><code>plot_missing(beers_df) #shows missing values using package DataExplorer</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <pre class="r"><code>names(breweries_df) # view the variable names</code></pre>
 <pre><code>## [1] &quot;Brew_ID&quot; &quot;Name&quot;    &quot;City&quot;    &quot;State&quot;</code></pre>
 <pre class="r"><code>dim(breweries_df) # view the dimensions of the data</code></pre>
@@ -497,7 +499,7 @@ names(beers_df) # view the variable names</code></pre>
 ##  Max.   :558.0   Sly Fox Brewing Company:  2   Denver  :  8    PA    : 25  
 ##                  (Other)                :546   (Other) :498   (Other):358</code></pre>
 <pre class="r"><code>plot_missing(breweries_df) #shows missing values using package DataExplorer</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
 <pre class="r"><code>brewery_dupes &lt;-
   as.character(breweries_df[which(duplicated(as.character(breweries_df$Name))), &quot;Name&quot;]) # Check for duplicates  breweries names
 breweries_df %&gt;% filter(Name == &quot;Summit Brewing Company&quot;)  # Brew_ID, City (St. Paul, St Paul)</code></pre>
@@ -588,7 +590,7 @@ all.equal(state_center, as.data.frame(state_center_region))</code></pre>
     plot.title = element_text(face = &quot;bold&quot;,
                               hjust = 0.5)
   ) # element_black : remove x- axis, y-axis lines, labels, title. Formate legneds and plot text</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-4-1.png" width="960" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-4-1.png" width="960" /></p>
 </div>
 <div id="question-2" class="section level2">
 <h2>Question 2:</h2>
@@ -630,7 +632,7 @@ head(beer_brewery_merged_df, n = 5) # view the first 5 records</code></pre>
 <pre class="r"><code>plot_missing(beer_brewery_merged_df,
              title = &quot;Missing Value State Post Merge of Data Sets&quot;,
              ggtheme = theme_clean())</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <pre class="r"><code>#aggr(beer_brewery_merged_df, prop = FALSE, numbers = TRUE)
 beer_brewery_merged_df &lt;-
   beer_brewery_merged_df %&gt;%  mutate(IBU = ifelse(is.na(IBU) |
@@ -639,7 +641,7 @@ beer_brewery_merged_df &lt;-
 plot_missing(beer_brewery_merged_df,
              title = &quot;Missing Values State After Cleanup of IBU&quot;,
              ggtheme = theme_clean())</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
 <pre class="r"><code># code added to drop ABV NA&#39;s
 beer_brewery_merged_df &lt;- beer_brewery_merged_df %&gt;% drop_na(ABV)</code></pre>
 </div>
@@ -765,7 +767,7 @@ p2 &lt;-
   ) + labs(title = &quot;Median ABV&quot;)
 
 grid.arrange(p1, p2, ncol = 2) # puts the two graph side by side</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
 <div id="question-5" class="section level2">
 <h2>Question 5:</h2>
@@ -840,7 +842,7 @@ ggplot(ibu_top, aes(x = State, y = ibumax, fill = ibumax)) + geom_bar(
   ) +
   labs(x = &quot;State&quot;, y = &quot;IBU&quot;) +
   coord_flip() # flips the to horizontal form</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <pre class="r"><code>#plot top ten state representing IBU using treemap formate
 treemap(
   #A Treemap displays hierarchical data as a set of nested rectangles. Each state is represented by a rectangle, which area is proportional to its IBU value
@@ -855,7 +857,7 @@ treemap(
   title = &quot;States IBU&quot;,
   fontsize.title = 14 # treemap title font size
 )</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
 <pre class="r"><code># plot top ten state representing ABV using bar plot
 ggplot(abv_top, aes(x = State, y = abvmax, fill = abvmax)) + geom_bar(
   stat = &quot;identity&quot;,
@@ -875,7 +877,7 @@ ggplot(abv_top, aes(x = State, y = abvmax, fill = abvmax)) + geom_bar(
   ) +
   labs(x = &quot;State&quot;, y = &quot;ABV&quot;) +
   coord_flip()</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
 <pre class="r"><code>#plot top ten state representing ABV using treempa formate
 treemap(
   abv_max,
@@ -886,7 +888,7 @@ treemap(
   title = &quot;States ABV&quot;,
   fontsize.title = 14
 )</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-8-4.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-8-4.png" width="672" /></p>
 </div>
 <div id="question-6" class="section level2">
 <h2>Question 6:</h2>
@@ -915,7 +917,7 @@ beer_brewery_merged_df %&gt;% ggplot(aes(x = ABV)) + geom_histogram(
   na.rm = TRUE
 ) + theme(axis.text.y = element_text(size = rel(0.8), angle = 90)) +
   labs(x = NULL, y = &quot;ABV&quot;)</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <pre class="r"><code>##   Bloxplot showing the variation of ABV by ounce
 beer_brewery_merged_df$Ounces = as.factor(beer_brewery_merged_df$Ounces)
 beer_brewery_merged_df %&gt;% ggplot(aes(y = ABV,
@@ -923,14 +925,14 @@ beer_brewery_merged_df %&gt;% ggplot(aes(y = ABV,
   theme(axis.text.y = element_text(size = rel(0.8), angle = 90)) +
   labs(x = &quot;Ounces&quot;, y = &quot;ABV&quot;) +
   ggtitle(&quot;Boxplot of ABV by Ounces&quot;)</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
 <pre class="r"><code># box plot showing the variation of ABV for three types: Ale, IPA and other
 beer_brewery_merged_df %&gt;% ggplot(aes(y = ABV,
                                       x = Beer_Type, fill = Beer_Type)) + geom_boxplot(na.rm = TRUE) +
   theme(axis.text.y = element_text(size = rel(0.8), angle = 90)) +
   labs(x = &quot;Type&quot;, y = &quot;ABV&quot;) +
   ggtitle(&quot;Boxplot of ABV by Beer Type&quot;)</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
 <pre class="r"><code>summary(beer_brewery_merged_df) # display summary statistic of data</code></pre>
 <pre><code>##                   Beer_Name       Beer_ID            ABV               IBU           Brewery_id   
 ##  Nonstop Hef Hop       :  12   Min.   :   1.0   Min.   :0.00100   Min.   :  0.00   Min.   :  1.0  
@@ -957,7 +959,7 @@ beer_brewery_merged_df %&gt;% ggplot(aes(y = ABV,
 ##                    
 ## </code></pre>
 <pre class="r"><code>plot_intro(beer_brewery_merged_df) # metrics display using DataExplorer package</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
 <pre class="r"><code>introduce(beer_brewery_merged_df) # Describe basic information in input data class like: # of col , # rows etc. </code></pre>
 <pre><code>##   rows columns discrete_columns continuous_columns all_missing_columns total_missing_values complete_rows
 ## 1 2348      11                7                  4                   0                    0          2348
@@ -979,7 +981,7 @@ beer_brewery_merged_df %&gt;% na.omit() %&gt;% # use only data without NAs
         legend.position = &quot;none&quot;) +
   labs(x = &quot;ABV&quot;, y = &quot;IBU&quot;) +
   ggtitle(&quot;Relationship between IBU and ABV&quot;)</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <pre class="r"><code>#Pearson&#39;s correlation with original data
 cor.test(beer_brewery_merged_df$IBU, beer_brewery_merged_df$ABV)</code></pre>
 <pre><code>## 
@@ -1033,14 +1035,14 @@ beer_brewery_merged_df %&gt;% na.omit() %&gt;%
 ## 
  plot: [3,3] [=============================================================&gt;----------------------------] 69% est: 1s 
  plot: [3,4] [===================================================================&gt;----------------------] 75% est: 1s 
- plot: [4,1] [========================================================================&gt;-----------------] 81% est: 1s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+ plot: [4,1] [========================================================================&gt;-----------------] 81% est: 0s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ## 
  plot: [4,2] [==============================================================================&gt;-----------] 88% est: 0s `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ## 
  plot: [4,3] [===================================================================================&gt;------] 94% est: 0s 
  plot: [4,4] [==========================================================================================]100% est: 0s 
                                                                                                                       </code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
 </div>
 <div id="question-8" class="section level2">
 <h2>Question 8</h2>
@@ -1147,9 +1149,9 @@ accuplot &lt;- ggplot(accu, aes(x = k, y = accuracy)) +
   geom_line() +
   labs(x = &quot;Tally&quot;, y = &quot;Accuracy&quot;)
 accuplot &lt;- plot(accuplot)</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <pre class="r"><code>accuplot</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-13-2.png" width="672" /></p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-13-2.png" width="672" /></p>
 </div>
 <div id="question-9" class="section level1">
 <h1>Question 9</h1>
@@ -1187,7 +1189,7 @@ market &lt;- g + geom_count(show.legend = F) +
     title = &quot;Large container consumption by State&quot;
   )
 market</code></pre>
-<p><img src="Beer_files/figure-html/unnamed-chunk-14-1.png" width="672" /> Conclusion</p>
+<p><img src="beer_analyis_files/figure-html/unnamed-chunk-14-1.png" width="672" /> Conclusion</p>
 <p># DDS- Project-01 Summary:</p>
 <p>The primary objective of our project is to take two different dataset, beer data set containing a list of 2410 US crafts beers and breweries dataset containing 558 breweries an perform analysis. We transformed the data in CVS format into data frame using R-programming, inspected and analyzed the structure of the data, merged the two data frames, and performed analysis on the merged final data set.</p>
 <p>As Data Scientist, it is very rare that we get to work only on a single perfect data. A large percentage of work is to accept different datasets and merge them into one final data frame before processing as it is illustrated in our project. After analyzing the data, statistical inference is then made.</p>
