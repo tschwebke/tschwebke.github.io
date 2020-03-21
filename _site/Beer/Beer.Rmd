@@ -38,11 +38,6 @@ h4.date { /* Header 4 - and the author and data headers use this too  */
 </style>
 <br>
 <br>
-```{r, include=FALSE}
-#beers_df <- read.csv("D:/GitHubRepo/tschwebke.github.io/data/Beers.csv")
-#breweries_df <-
-  read.csv("D:/GitHubRepo/tschwebke.github.io/data/Breweries.csv") 
-```
 
 ```{r, include=FALSE}
 library(tidyverse)
@@ -69,6 +64,9 @@ library(shiny)
 ```
 
 ```{r}
+beers_df <- read.csv("D:/GitHubRepo/tschwebke.github.io/data/Beers.csv")
+breweries_df <-
+  read.csv("D:/GitHubRepo/tschwebke.github.io/data/Breweries.csv") 
 brewery_dupes <-
   as.character(breweries_df[which(duplicated(as.character(breweries_df$Name))), "Name"]) # Check for duplicates  breweries names
 breweries_df %>% filter(Name == "Summit Brewing Company")  # Brew_ID, City (St. Paul, St Paul)
@@ -78,32 +76,20 @@ breweries_df$City <-
   str_replace_all(breweries_df$City, "St. Paul", "St Paul") ## sync spelling
 breweries_df$City <-
   str_replace_all(breweries_df$City, "Menominee", "Menominie") ## sync spelling
-```
 
-```{r Santize Variables, message=FALSE, warning=FALSE}
-options(show.error.messages = FALSE)
-try(breweries_df <-
-      rename(breweries_df, Brewery_id = Brew_ID))
-# changed col or variable name to match both data set.
-try(breweries_df <-
-      rename(breweries_df, Brewery_Name = Name))
-#changed col or variable name
-try(beers_df <-
-      rename(beers_df, Beer_Name = Name))
-#changed col or variable name
-options(show.error.messages = TRUE)
+beer_brewery_merged_df <- merge(beers_df, breweries_df, by.x = "Brewery_id", by.y = "Brew_ID")
+beer_brewery_merged_df <-
+  beer_brewery_merged_df %>%  mutate(IBU = ifelse(is.na(IBU) |
+                                                    is.na(ABV), 0, IBU)) # replace all empty and NA value by zero. 
+# code added to drop ABV NA's
+beer_brewery_merged_df <- beer_brewery_merged_df %>% drop_na(ABV)
 ```
 
 ```{r}
 states_df <- map_data("state") # get US states and their coordinates
-```
-
-```{r fig.height=6, fig.width=10}
-names(breweries_df) <-
-  c("Brewery_id", "Name", "City", "State")
 brewery_states_df <-
-  breweries_df %>% group_by(State) %>% distinct(Brewery_id) # grouping by State using dplyr package
-brewery_count <- aggregate(Brewery_id ~ State, breweries_df, length)
+  breweries_df %>% group_by(State) %>% distinct(Brew_ID) # grouping by State using dplyr package
+brewery_count <- aggregate(Brew_ID ~ State, breweries_df, length)
 names(brewery_count) <-
   c("State", "Breweries") # replace the col names
 
@@ -116,20 +102,6 @@ brewery_map_df <-
   left_join(states_df, brewery_count, by = "region") # merge state_df and brewery count by region to plot all the state in us map.
 ```
 
-```{r}
-beer_brewery_merged_df <-
-  full_join(beers_df, breweries_df, by = "Brewery_id") # merge by  full_join  using key word  Brewery_id
-```
-
-```{r}
-beer_brewery_merged_df <-
-  beer_brewery_merged_df %>%  mutate(IBU = ifelse(is.na(IBU) |
-                                                    is.na(ABV), 0, IBU)) # replace all empty and NA value by zero. 
-# code added to drop ABV NA's
-beer_brewery_merged_df <- beer_brewery_merged_df %>% drop_na(ABV)
-```
-
-
 ```{r echo=FALSE}
 ui <- fluidPage(# Application title
   sidebarLayout(
@@ -141,7 +113,7 @@ ui <- fluidPage(# Application title
       selectInput(
         "select",
         "Select plot type",
-        choices = c("Histogram", "Boxplot", "Scatterplot", "Correlation")
+        choices = c("Histogram", "Boxplot", "Scatterplot")
       ),
       
       # Select regression line in scatterplot
