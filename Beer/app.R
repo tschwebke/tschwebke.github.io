@@ -19,10 +19,13 @@ library(class)
 library(e1071)
 library(caret)
 library(shiny)
+library(RCurl)
+x <- getURL("https://raw.github.com/tschwebke/tschwebke.github.io/blob/master/Beers.csv")
+y <- getURL("https://raw.github.com/tschwebke/tschwebke.github.io/blob/master/Breweries.csv")
 
-beers_df <- read.csv("./Beers.csv")
+beers_df <- read.csv(text = x)
 breweries_df <-
-    read.csv("./Breweries.csv") 
+    read.csv(text = y) 
 brewery_dupes <-
     as.character(breweries_df[which(duplicated(as.character(breweries_df$Name))), "Name"]) # Check for duplicates  breweries names
 breweries_df %>% filter(Name == "Summit Brewing Company")  # Brew_ID, City (St. Paul, St Paul)
