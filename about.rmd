@@ -5,10 +5,10 @@ date: "3/21/2020"
 output: html_document
 ---
 
-[logo]:pic.jfif
+[logo]: pic.jfif
 
 # Thad Schwebke
-[LinkedIn Profile]:www.linkedin.com/in/thadschwebke
+[LinkedIn Profile]: www.linkedin.com/in/thadschwebke
 Sr Support Planner at Microsoft
 Dallas/Fort Worth Area
 

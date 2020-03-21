@@ -20,8 +20,8 @@ library(e1071)
 library(caret)
 library(shiny)
 library(RCurl)
-x <- getURL("https://raw.github.com/tschwebke/tschwebke.github.io/blob/master/Beers.csv")
-y <- getURL("https://raw.github.com/tschwebke/tschwebke.github.io/blob/master/Breweries.csv")
+x <- getURL("https://raw.githubusercontent.com/tschwebke/tschwebke.github.io/master/Beers.csv")
+y <- getURL("https://raw.githubusercontent.com/tschwebke/tschwebke.github.io/master/Breweries.csv")
 
 beers_df <- read.csv(text = x)
 breweries_df <-
