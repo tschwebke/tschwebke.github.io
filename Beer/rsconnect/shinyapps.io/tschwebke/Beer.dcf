@@ -5,8 +5,8 @@ account: tschwebke
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1975466
-bundleId: 2906476
+bundleId: 2906501
 url: https://tschwebke.shinyapps.io/Beer/
-when: 1584825808.28729
+when: 1584826413.59945
 asMultiple: FALSE
 asStatic: FALSE

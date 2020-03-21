@@ -19,6 +19,7 @@ library(class)
 library(e1071)
 library(caret)
 library(shiny)
+library(openintro)
 library(RCurl)
 x <- getURL("https://raw.githubusercontent.com/tschwebke/tschwebke.github.io/master/Beers.csv")
 y <- getURL("https://raw.githubusercontent.com/tschwebke/tschwebke.github.io/master/Breweries.csv")
@@ -50,8 +51,6 @@ brewery_count <- aggregate(Brew_ID ~ State, breweries_df, length)
 names(brewery_count) <-
     c("State", "Breweries") # replace the col names
 
-brewery_count$State <-
-    trim(brewery_count$State, recode.factor = TRUE) # trim white spaces
 brewery_count$region <-
     tolower(abbr2state(brewery_count$State)) # change all region to lower case
 
