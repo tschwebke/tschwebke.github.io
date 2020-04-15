@@ -55,7 +55,7 @@ No this is the only data we have, there is no mistake.
 Training times last year means number of training sessions attended by the employee. 
 
 ## Data Wrangling
-```{r Data Wrangling, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Data Wrangling, echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(miscset)
 library(DataExplorer)
@@ -139,7 +139,7 @@ The Attrition Rate is 16.1%.
 * StandardHours (remove)
 
 ## Cleanse Data
-```{r Cleanse Data, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Cleanse Data, echo=TRUE, message=FALSE, warning=FALSE}
 # reorder columns
 main.df <- main.df[c(1, 11, 3, 2, 4:10, 12:36)]
 str(main.df)
@@ -153,7 +153,7 @@ main.df <-
 We've removed EmployeeCount and StandardHours from the data set. EmployeeCount was always equal to "1" and StandardHours equal to "80".
 
 ## Transforms
-```{r Transforms, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Transforms, echo=TRUE, message=FALSE, warning=FALSE}
 library(plyr)
 
 # create salary variable
@@ -228,7 +228,7 @@ A dataset (CaseStudy2-data.csv) has been provided to do an analysis that will id
 The analysis should be backed up by robust experimentation and appropriate visualization. Experiments and analysis must be conducted in R. 
 
 ## Attrition Overiew
-```{r Attrition Overview, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Attrition Overview, echo=TRUE, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(gridExtra)
 library(scales)
@@ -257,7 +257,7 @@ group_var %>% ggplot(aes(x = Attrition, y = count)) +
 Out of 870 employees. 140 have left the company. The overall attrition rate is 16%. 
 
 ## Functions
-```{r Functions, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Functions, echo=TRUE, message=FALSE, warning=FALSE}
 # function to print bar plots for all factor comparisons to attrition
 getFactorPctPlot <- function(df, x1, x2) {
   s1 <- df[, c(x1, x2)]
@@ -294,7 +294,7 @@ getFactorPctPlot <- function(df, x1, x2) {
 This function is used to produce comparison bar plots for any two given variables.
 
 ## Categorical Variable Attrition Plots
-```{r Categorical Variable Attrition Plots, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Categorical Variable Attrition Plots, echo=TRUE, message=FALSE, warning=FALSE}
 # define a vector for all factor variables
 attr_factors <-
   c(5, 7, 10, 12, 15:16, 18, 21, 23, 27, 29, 36:42)
@@ -328,7 +328,7 @@ Based on the bar plots of categorical variables in relation to Attrition, the fo
 18. Work life balance stands out similar to job involvement. The attrition rate is higher for employees that don't have a good work/life balance.
 
 ## Continuous Variable Attrition Plots
-```{r Continuous Variable Attrition Plots, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Continuous Variable Attrition Plots, echo=TRUE, message=FALSE, warning=FALSE}
 # define a vector for all continuous variables
 attr_continuous <- c(4, 6, 8, 13, 19:20, 24, 28, 31:34)
 for (attr_con in attr_continuous) {
@@ -360,7 +360,7 @@ for (attr_con in attr_continuous) {
 To aide in identifying the primary factors leading to attrition, we'll use variable importance and a generalized linear model (GLM).
 
 ## Variable Importance for Prediciting Attrition
-```{r Variable Importance, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Variable Importance, echo=TRUE, message=FALSE, warning=FALSE}
 library(caret)
 
 # data frame to use with variable importance and remove Over18 because it is a single factor
@@ -447,7 +447,7 @@ Top 3 factors contributing to no attrition
 The top 3 factors contributing to attrition are the presence of overtime, marital status of single and married individuals, and the distance of an employees commute.
 
 ## Correlation and multicollinearity
-```{r Correlation and multicollinearity, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Correlation and multicollinearity, echo=TRUE, message=FALSE, warning=FALSE}
 library(corrplot)
 library(mosaic)
 library(performance)
@@ -593,7 +593,7 @@ I have also provided an additional data set of 300 observations that do not have
 Notes on models to fit: IMPORTANT: First and foremost, you may use outside models that we have not covered but it must be in addition to models that we have covered in class. This means for classifying attrition, you must use either k-NN or naive Bayes but may also use other models (logistic regression, random forest, LDA, SVM, etc) as long as you compare the results between the two or more models. You may then use any of the models to fulfill the 60/60 sensitivity/specificity requirement. This goes for regression as well; you must use linear regression but may include additional models for comparison and use in the competition (LASSO, random forest, ensemble models, etc.).  
 
 ## KNN
-```{r KNN, echo=FALSE, message=FALSE, warning=FALSE}
+```{r KNN, echo=TRUE, message=FALSE, warning=FALSE}
 library(igraph)
 library(class)
 
@@ -714,7 +714,7 @@ The model is 85.06% accurate at prediciting attrition.
 - Since the overall attrition rate is only 16%, it is important to be able to accurately classify employees who have truely left the company. 
 
 ## Naive Bayes
-```{r Naive Bayes, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Naive Bayes, echo=TRUE, message=FALSE, warning=FALSE}
 library(e1071)
 library(arsenal)
 
@@ -790,7 +790,7 @@ The model is 99.54% accurate at prediciting attrition.
 - Since the overall attrition rate is only 16%, it is important to be able to accurately classify employees who have truely left the company. 
 
 ## Linear Regression
-```{r Linear Regression, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Linear Regression, echo=TRUE, message=FALSE, warning=FALSE}
 setwd(path_loc)
 
 # Create a training df with only numeric variables
@@ -918,7 +918,7 @@ This linear regression model gives us an RMSE of 1,419 on monthly income, which 
 
 
 # Job Role Specific Trends
-```{r Job Role Specific Trends, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Job Role Specific Trends, echo=TRUE, message=FALSE, warning=FALSE}
 # define a vector for all factor variables
 role_factors <-
   c(3:5, 7:12, 14:15, 17:18, 21, 23:34)
@@ -933,7 +933,7 @@ for (role_fac in role_factors) {
 
 
 # Other Interesting Trends
-```{r Other Interesting Trends, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Other Interesting Trends, echo=TRUE, message=FALSE, warning=FALSE}
 # job satisfaction and salary
 attr_plot <- getFactorPctPlot(main.df, 17, 35)
   print(attr_plot)
