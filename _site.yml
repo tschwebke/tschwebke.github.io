@@ -2,7 +2,9 @@ name: "My Website"
 navbar:
   title: "Thad Schwebke"
   left:
-    - text: "Home"
+    - text: "Beer Project"
       href: index.html
+      text: "Case Study 02"
+      href: Case-Study-2.html
     - text: "About"
       href: about.html

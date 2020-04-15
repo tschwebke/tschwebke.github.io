@@ -1,0 +1,1036 @@
+---
+title: "Case Study 2"
+author: "Thad Schwebke"
+date: "4/9/2020"
+output: 
+  html_document: 
+    toc: yes
+---
+# Setup
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(width = 150,
+        scipen = 999,
+        max.print = 1000)
+#update.packages(ask = FALSE, checkBuilt = TRUE)
+rm(list = ls()) 
+```
+
+# Rubric
+The due date for your Case Study 02 is Saturday 4/18 by 11:59pm.
+
+* 30% RMarkdown File
+* 30% Final Video Presentation (15% slide content, 15% presentation)
+  + Minimal Stumbles / mis statements / etc.  if you trip up more than a couple of times, reshoot the video. It will be much better with the practice!
+  + Labeled Plots
+  + 7-minute time limit
+  + Correct interpretation
+  + Complete analysis – this means adding pvalues and conducting tests where appropriate (I expect everyone to have a good handle on at least t-tests, KNN and Naïve Bayes     classification and KNN and linear regression to this point.  
+* 10% Validation Requirement for Attrition(Sensitivity > 60% and Specificity > 60%)
+* 10% Validation Requirement for Salary(RMSE < $3000)
+* 10% Creativity and completeness in presentation and analysis.
+* 10% Knit RMD and YouTube link on a tab on your GitHub Site.
+
+# FAQ and Comments
+1.  Question: In the dataset, what does Relationship Satisfaction mean...(relationship to manager, to peers) Relationship satisfaction with manager. 
+  + Advice: Don't eliminate variables simply because they have a high correlation with one another.  This is an indication that they do share some information although the information they don't share may be correlated with the response individually.  
+  + Advice: When plotting and exploring attrition, the percentage of those who left is probably more useful than the count.  
+
+2. Question: In the dataset, is the distance from home in miles or kilos?
+We don't have that information (however we do know whether its high or low)
+
+3.  Question: In the dataset: what is the definition of pay rates: Hourly, Daily & Monthly.  These values to not seem to relate to each other or the Monthly Salary (which is different than Monthly Rate).
+We don't have that information (however we do know whether they are high or low). They may or may not relate to each other or the monthly salary (this is for the student to infer and decide whether theres any correlation or whether this is a useful feature for attrition)
+
+4. Question: In the dataset: we do see that Job Levels go from 1-5 and assume that 1 may symbolize a lower level employee, but this is not defined.  Though this level does have a positive linear relationship with Monthly Income, it does not seem to correlate well with the Job Titles. in other words someone with a Director can be a 2-5, and manager a 3-5.
+Yes we can assume 1 is a lower job level than 5. 
+
+5. Question: In the dataset, does overtime mean Hourly vs. Salaried worker?
+We can assume that people with overtime are non-exempt employees. 
+
+6. Question: In the dataset, Performance Ratings are only 3 & 4, is there a mistake?  Unless a corrupted system, hard to imagine ratings consistently high, even as 2 still means "good". It is self-reported data, think about why the employees may only answer 3 and 4
+No this is the only data we have, there is no mistake. 
+
+7. Question: In the dataset, does Training times mean: hours, weeks, or instances and over what period?
+Training times last year means number of training sessions attended by the employee. 
+
+## Data Wrangling
+```{r Data Wrangling, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(miscset)
+library(DataExplorer)
+
+# set working directory location
+path_loc <-
+  "C:/Users/thads/OneDrive/SMU Data Science/DS6306/Project 2/DDS-6306-Case-Study-2/data/"
+setwd(path_loc)
+
+# open data file
+main.df <- read.csv("CaseStudy2-data.csv")
+
+# inspect data
+str(main.df)
+dim(main.df)
+summary(main.df)
+
+# data explorer to create reports - data summary and missing values
+introduce(main.df)
+plot_intro(main.df)
+```
+
+The initial summary of the data shows us that there are 36 features with 870 observations. The 36 features consist of 9 categorical variables and 27 continuous variables. There are 0 missing values and all rows are unique.
+
+The Attrition Rate is 16.1%.
+
+### Individuals
+* Employees: 870
+* Avg age: 36.8 years
+* Gender
+  + Male: 59.3% 
+  + Female: 40.7%
+* Mean years of education: 2.9 years
+
+### Compensation
+* Avg yearly income: $76,683
+* Avg salary increase: 15.2%
+* Employees overtime: 29%
+
+### Performance
+* Avg performance rating: 3.2
+* Avg years in current role: 4.2 years
+* Avg years since last promotion: 2.2 years
+
+### Roles
+* Avg years at company: 7 years
+* Avg years with current manager: 4.14 years
+
+* Number of departments: 3 
+  + Sales: 31.38%
+  + Research & Development: 64.6%
+  + Human Resources: 4.02%
+
+* Number of job roles: 9
+  + Sales Executive: 22.99%
+  + Research Director: 5.86%
+  + Manufacturing Director: 10%
+  + Research Scientist: 19.77%
+  + Sales Representative: 6.09%
+  + Healthcare Representative: 8.74%
+  + Manager: 5.86%
+  + Human Resources: 3.1%
+  + Laboratory Technician: 17.59% 
+
+### Employee Health Ratings
+* Satisfaction Ratings
+  + Work environment: 2.7
+  + Job involvement: 2.7
+  + Overall job satisfaction: 2.7
+  + Relationship rating: 2.7
+  + Work Life Balance: 2.8
+
+### Unimportant variables
+* DailyRate
+* EmployeeCount (remove)
+* EmployeeNumber
+* HourlyRate
+* MonthlyIncome
+* MonthlyRate
+* Over18
+* StandardHours (remove)
+
+## Cleanse Data
+```{r Cleanse Data, echo=FALSE, message=FALSE, warning=FALSE}
+# reorder columns
+main.df <- main.df[c(1, 11, 3, 2, 4:10, 12:36)]
+str(main.df)
+dim(main.df)
+
+# remove useless variables
+main.df <-
+  main.df %>% subset(select = -c(EmployeeCount, StandardHours))
+```
+
+We've removed EmployeeCount and StandardHours from the data set. EmployeeCount was always equal to "1" and StandardHours equal to "80".
+
+## Transforms
+```{r Transforms, echo=FALSE, message=FALSE, warning=FALSE}
+library(plyr)
+
+# create salary variable
+main.df$YearlySalary <- main.df$MonthlyIncome * 12
+summary(main.df$YearlySalary)
+
+# save a copy of a clean data frame before adding labels
+clean.df <- main.df
+
+# map continuous variables flags to textual labels
+main.df$Education_lbl <- mapvalues(
+  main.df$Education,
+  from = c(1, 2, 3, 4, 5),
+  to = c("Below College", "College", "Bachelor", "Master", "Doctor")
+)
+
+main.df$EnvironmentSatisfaction_lbl <- mapvalues(
+  main.df$EnvironmentSatisfaction,
+  from = c(1, 2, 3, 4),
+  to = c("Low", "Medium", "High", "Very High")
+)
+
+main.df$JobInvolvement_lbl <- mapvalues(
+  main.df$JobInvolvement,
+  from = c(1, 2, 3, 4),
+  to = c("Low", "Medium", "High", "Very High")
+)
+
+main.df$JobSatisfaction_lbl <- mapvalues(
+  main.df$JobSatisfaction,
+  from = c(1, 2, 3, 4),
+  to = c("Low", "Medium", "High", "Very High")
+)
+
+main.df$PerformanceRating_lbl <- mapvalues(
+  main.df$PerformanceRating,
+  from = c(1, 2, 3, 4),
+  to = c("Low", "Good", "Excellent", "Outstanding")
+)
+
+main.df$RelationshipSatisfaction_lbl <- mapvalues(
+  main.df$RelationshipSatisfaction,
+  from = c(1, 2, 3, 4),
+  to = c("Low", "Medium", "High", "Very High")
+)
+
+main.df$WorkLifeBalance_lbl <- mapvalues(
+  main.df$WorkLifeBalance,
+  from = c(1, 2, 3, 4),
+  to = c("Low", "Good", "Excellent", "Outstanding")
+)
+```
+
+A new YearlySalary variable was created. This may help with the potential removal of DailyRate, HourlyRate, MonthlyIncome, and MonthlyRate.
+
+Before making any additional changes to the primary data frame, we'll create a "clean" version of the data frame that can be used later.
+
+The survey related variables, as well as Education are all continuous variables. We will add a label column to the data frame to store labels that can be used for labeling of plots.
+
+# Problem Description
+DDSAnalytics is an analytics company that specializes in talent management solutions for Fortune 100 companies. Talent management is defined as the iterative process of developing and retaining employees. It may include workforce planning, employee training programs, identifying high-potential employees and reducing/preventing voluntary employee turnover (attrition). To gain a competitive edge over its competition, DDSAnalytics is planning to leverage data science for talent management. The executive leadership has identified predicting employee turnover as its first application of data science for talent management. Before the business green lights the project, they have tasked your data science team to conduct an analysis of existing employee data. 
+
+# Presentation Details
+A dataset (CaseStudy2-data.csv) has been provided to do an analysis that will identify the top factors leading to attrition.  
+
+1. Identify the top three factors that contribute to turnover (backed up the evidence provided with solid analysis). There may or may not be a need to create derived attributes/variables/features. 
+2. The business is also interested in learning about any job role specific trends that may exist in the data set (e.g., “Data Scientists have the highest job satisfaction”). 
+3. Provide any other interesting trends and observations from the analysis. 
+4. Build a model to predict attrition and salary.
+5. Record and upload to YouTube a 7-minute presentation
+
+The analysis should be backed up by robust experimentation and appropriate visualization. Experiments and analysis must be conducted in R. 
+
+## Attrition Overiew
+```{r Attrition Overview, echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(gridExtra)
+library(scales)
+library(ggpubr)
+library(dplyr)
+
+# attrition
+group_var <-
+  main.df %>% group_by(Attrition) %>% dplyr::summarize(count = dplyr::n())
+group_pct <- group_var$count[2] / dim(main.df)[1] * 100
+group_var %>% ggplot(aes(x = Attrition, y = count)) +
+  geom_bar(stat = "identity", alpha = .6, fill = "blue") +
+  labs(x = "Attrition", y = "Employees", title = "Attrition Rate") +
+  geom_text(
+    aes(y = count, label = count),
+    fontface = "bold",
+    position = position_dodge(width = .9),
+    size = 4,
+    color = "white",
+    vjust = 2
+  )  +
+  coord_cartesian(ylim = c(0, 800)) +
+  scale_fill_brewer(palette = "Paired") +  ggthemes::theme_par()
+```
+
+Out of 870 employees. 140 have left the company. The overall attrition rate is 16%. 
+
+## Functions
+```{r Functions, echo=FALSE, message=FALSE, warning=FALSE}
+# function to print bar plots for all factor comparisons to attrition
+getFactorPctPlot <- function(df, x1, x2) {
+  s1 <- df[, c(x1, x2)]
+  names(s1) <- c("Col1", "Col2")
+  s1 <- s1 %>% dplyr::group_by(Col1, Col2) %>% dplyr::count(Col1)
+  s1 <- do.call(data.frame, s1)
+  s1 <-
+    s1 %>% dplyr::group_by(Col2) %>% mutate(percent = n * 100 / sum(n))
+  s1 <- do.call(data.frame, s1)
+  y_lab <- str_c(names(df)[x1], " Percent")
+  p <-
+    ggplot(data = s1, aes(
+      x = Col2,
+      y = percent,
+      fill = as.factor(Col1)
+    )) +
+    geom_bar(
+      position = "fill",
+      color = "blue",
+      stat = "identity",
+      alpha = .6
+    ) +
+    scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+    scale_fill_brewer(palette = "Paired") +  ggthemes::theme_par() +
+    labs(x = names(df)[x2],
+         y = y_lab,
+         fill = names(df)[x1]) +
+    labs(title = str_c(names(df)[x1], " by ", names(df)[x2])) +
+    theme(axis.text.x = element_text(vjust = 2))
+  return(p)
+}
+```
+
+This function is used to produce comparison bar plots for any two given variables.
+
+## Categorical Variable Attrition Plots
+```{r Categorical Variable Attrition Plots, echo=FALSE, message=FALSE, warning=FALSE}
+# define a vector for all factor variables
+attr_factors <-
+  c(5, 7, 10, 12, 15:16, 18, 21, 23, 27, 29, 36:42)
+
+# print bar plot for each factor
+for (attr_fac in attr_factors) {
+  attr_plot <- getFactorPctPlot(main.df, 3, attr_fac)
+  print(attr_plot)
+}
+```
+
+Based on the bar plots of categorical variables in relation to Attrition, the following discoveries were made:
+
+1. The more frequently an employees travels it increases the frequency of the employee leaving.
+2. The Sales department has the highest percentage (22%) of attrition from all 3 departments. HR has an attrition rate of 17% and R&D was 13.3%.
+3. Employees that came from a Human Resources (27%) education are the most likely to leave. Marketing (22%) and Technical (23%) are close behind.
+4. There is not much difference between Female and Male as it relates to attrition.
+5. The lower an employees job level (i.e level 1 at 26%) the higher the attrition rate. 
+6. Sales representative (48%) and Human Resources (24%) employees have higher attrition rates.
+7. Single employees have a high rate of attrition (26%). Likely due to not having a spouse or child to consider when leaving a job. Divorcee's only have a 6% attrition rate.
+8. Employees that have worked at 5 or more companies must feel comfortable with changing jobs. These employees have the highest attrition rate.
+9. Overtime is a big contributor to attrition. Employee attrition rating is 3 times higher (31% vs 10%) when employees work overtime.
+10. Stock option levels are not clear and the data doesn't help. I'd assume that employees with a 0 stock level would mean the employee doesn't own stock. Compared to employees are a stock level of 3 which get the most stock options. The plot says employees at a level 0 have a higher attrition rate (26%), than people who have stock options. This could be because they don't have a vested interest in the company. The reason for stock option level 3 being high (22%) could be because these employees are close or at retirement age.
+11. Similar to stock options. Employees that don't get any training are the ones with the highest attrition rating (27%). It flattens out once an employees receives training.
+12. Education level is fairly flat. The high attrition rates come from employees with only a college degree or less (level 1-3).
+13. Environment satisfaction is clear. A low (or bad) work environment causes high attrition (26%).
+14. Same as environment satisfaction. Low job involvement equals higher attrition. In this case its much higher (48%).
+15. Its urprising to see job satisfaction pretty flat. It would have been expected for it to follow the trend of environment satisfaction and job involvement.
+16. Performance rating is uninteresting due to having only two options.
+17. Like job involvement and education & job satisfaction, employees that have a low relationship rating have a higher attrition rate (22%).
+18. Work life balance stands out similar to job involvement. The attrition rate is higher for employees that don't have a good work/life balance.
+
+## Continuous Variable Attrition Plots
+```{r Continuous Variable Attrition Plots, echo=FALSE, message=FALSE, warning=FALSE}
+# define a vector for all continuous variables
+attr_continuous <- c(4, 6, 8, 13, 19:20, 24, 28, 31:34)
+for (attr_con in attr_continuous) {
+  attr_df <- main.df[, c(3, attr_con)]
+  names(attr_df) <- c("Attrition", "Variable")
+  attr_plot2 <-
+    ggplot(attr_df, aes(x = Variable, fill = Attrition)) +
+    geom_histogram(alpha = .6, position = "identity") +
+    labs(x = names(main.df)[attr_con], y = "Count") +
+    stat_bin(bins = 30) +
+    scale_fill_brewer(palette = "Paired") +  ggthemes::theme_par()
+  print(attr_plot2)
+}
+```
+
+1. Employeein their 20's have a higher rate of attrition in proportion to the number of employees at that same age.
+2. Daily rate doesn't really show much.
+3. Distance from home shows that the proportion of employees with high attrition rates have longer commutes (12+ miles).
+4. Hourly rate doesn't really show much.
+5. Employees with lower incomes have a higher attrition rate.
+6. Monthly rate aligns with the same insights as lower incomes.
+7. Percentage salary increase is fairly flat. It does look like employees that had a 22 or higher salary increase have a higher attrition rate.
+8. The attrition rate for employees that have fewer years of work experience is higher. This will most likely align with years at company and age.
+9. The attrition rate for employees that stay with the company less than 2 years is 10%. Attrition after 10 years is almost non existant.
+10. Like many of the time based variables. The fewer years in role means higher attrition.
+11. Surprising that there is a high attrition rate for employees within 1-3 years of getting a promotion.
+12. Like many of the time based variables. The fewer years with their current manager means higher attrition.
+
+To aide in identifying the primary factors leading to attrition, we'll use variable importance and a generalized linear model (GLM).
+
+## Variable Importance for Prediciting Attrition
+```{r Variable Importance, echo=FALSE, message=FALSE, warning=FALSE}
+library(caret)
+
+# data frame to use with variable importance and remove Over18 because it is a single factor
+varImp.df <- clean.df %>% subset(select = -c(Over18))
+
+# setup sampling method for repeated cross validation
+control <- trainControl(method = "repeatedcv",
+                        number = 10,
+                        repeats = 3)
+
+# train the model
+varImp_model <-
+  train(
+    Attrition ~ .,
+    data = varImp.df,
+    method = "lvq",
+    preProcess = "scale",
+    trControl = control
+  )
+
+# estimate variable importance
+varImp_results <- varImp(varImp_model, scale = FALSE)
+
+# summarize and plot variable importance
+print(varImp_results)
+plot(varImp_results)
+
+# split data into train and test data
+set.seed(1257)
+partition_df <-
+  sample(seq_len(nrow(varImp.df)), size = nrow(varImp.df) * 0.7)
+train.df <- varImp.df[partition_df, ]
+test.df <- varImp.df[-partition_df, ]
+
+# use output from varImp to determine top 3 contributors for attrition
+glm_model <-
+  glm(
+    Attrition ~ OverTime + MonthlyIncome + YearlySalary + TotalWorkingYears +
+      YearsAtCompany + StockOptionLevel + MaritalStatus + JobLevel + YearsInCurrentRole +
+      YearsWithCurrManager + Age + JobInvolvement + JobSatisfaction + JobRole +
+      Department + DistanceFromHome + EnvironmentSatisfaction + WorkLifeBalance +
+      TrainingTimesLastYear + Education,
+    family = binomial(link = 'logit'),
+    data = train.df
+  )
+summary(glm_model)
+```
+
+Reviewing the list of variables and their importance on predicting attrition, we can see that the top factors in predicting attrition are:
+
+* OverTime 0.6679061
+* MonthlyIncome	0.6567368
+* YearlySalary	0.6567368
+* TotalWorkingYears	0.6563405			
+* YearsAtCompany	0.6470059
+* StockOptionLevel	0.6454990
+* MaritalStatus	0.6438258
+* JobLevel	0.6405969
+* YearsInCurrentRole	0.6402789
+* YearsWithCurrManager	0.6291096
+* Age	0.6264579
+* JobInvolvement	0.6159344
+* JobSatisfaction	0.5833170
+* JobRole	0.5828718
+* Department	0.5604843
+* DistanceFromHome	0.5586399
+* EnvironmentSatisfaction	0.5532094
+* WorkLifeBalance	0.5491096
+* TrainingTimesLastYear	0.5427935
+* Education	0.5383659
+
+Top 3 factors contributing to attrition
+
+* OverTime (Yes) with p-value of 0.000000000241
+* MaritalStatus (Single) p-value 0.002014
+* MaritalStatus (Married) p-value 0.022413
+* DistanceFromHome with p-value of 0.012260
+
+Top 3 factors contributing to no attrition
+* JobInvolvement with p-value of 0.000113
+* JobSatisfaction wiith p-value of 0.000466
+* WorkLifeBalance with p-value of 0.008461
+
+The top 3 factors contributing to attrition are the presence of overtime, marital status of single and married individuals, and the distance of an employees commute.
+
+## Correlation and multicollinearity
+```{r Correlation and multicollinearity, echo=FALSE, message=FALSE, warning=FALSE}
+library(corrplot)
+library(mosaic)
+library(performance)
+library(see)
+library(varhandle)
+library(GGally)
+
+# correlation heat map for visual inspection of correlation
+corr.df <-
+  main.df
+
+# convert factors into integers
+corr.df[c(
+  "Attrition",
+  "JobRole",
+  "BusinessTravel",
+  "Department",
+  "EducationField",
+  "Gender",
+  "JobSatisfaction",
+  "MaritalStatus",
+  "OverTime"
+)] <-
+  lapply(corr.df[c(
+    "Attrition",
+    "JobRole",
+    "BusinessTravel",
+    "Department",
+    "EducationField",
+    "Gender",
+    "JobSatisfaction",
+    "MaritalStatus",
+    "OverTime"
+  )], as.integer)
+
+corr.df$Attrition <- as.numeric(main.df$Attrition)
+corr.num.df <- corr.df %>% keep(is.numeric)
+cor(corr.num.df, use = "complete.obs")
+corrplot(
+  round(cor(corr.num.df, use = "complete.obs"), 2),
+  title = "Correlation Plot for Continuous Variables",
+  type = "lower",
+  addCoef.col = "grey",
+  method = "color",
+  tl.pos = "ld",
+  tl.srt = 1,
+  tl.cex = .55,
+  tl.col = 'black',
+  order = "hclust",
+  diag = FALSE,
+  mar = c(0, 0, 5, 0),
+  bg = "ivory1",
+  hclust.method = "complete",
+  cl.align.text = "c",
+  cl.cex = .55,
+  number.digits = 2,
+  number.cex = .55
+)
+
+# positive correlation variables
+main.df %>%
+  select(OverTime,
+         MaritalStatus,
+         Department,
+         JobRole,
+         DistanceFromHome,
+         Attrition) %>%
+  ggpairs(mapping = aes(color = Attrition))
+
+# negative correlation variables
+main.df %>%
+  select(
+    JobSatisfaction,
+    EnvironmentSatisfaction,
+    WorkLifeBalance,
+    YearsWithCurrManager,
+    YearsAtCompany,
+    YearsInCurrentRole,
+    Attrition
+  ) %>%
+  ggpairs(mapping = aes(color = Attrition))
+
+main.df %>%
+  select(Age,
+         TotalWorkingYears,
+         JobLevel,
+         MonthlyIncome,
+         StockOptionLevel,
+         Attrition) %>%
+  ggpairs(mapping = aes(color = Attrition))
+
+multi.col.model <-
+  lm(
+    as.numeric(Attrition) ~ OverTime + MaritalStatus + Department + JobRole + DistanceFromHome + Attrition +
+      JobSatisfaction + EnvironmentSatisfaction + WorkLifeBalance + YearsWithCurrManager + YearsAtCompany + YearsInCurrentRole + Age + TotalWorkingYears + JobLevel + MonthlyIncome + StockOptionLevel,
+    data = main.df
+  )
+multi.col.output <- check_collinearity(multi.col.model)
+multi.col.output
+plot(multi.col.output)
+```
+
+* Overtime and marital status have a moderate-level of positive correlation
+* DistanceFromHome, Department, and JobeRole have a low-level of positive correlation
+* JobSatisfaction, EnvironmentSatisfaction, WorkLifeBalance, YearsWithCurrManager, YearsAtCompany, YearsInCurrentRole, Age, TotalWorkingYears, JobLevel, MonthlyIncome, StockOptionLevel, and JobInvolvement all have low-levels of  negative correlation
+
+Some variables show some pairwise correlation, however none of the correlations are high enough to require variable removal since our variable identification methods are robust to collinearity. However, removing Department or JobRole is an option depending on the strength of the models.
+
+Low Correlation
+
+               Parameter  VIF Increased SE
+                OverTime 1.12         1.06
+           MaritalStatus 1.91         1.38
+        DistanceFromHome 1.04         1.02
+               Attrition 1.25         1.12
+         JobSatisfaction 1.04         1.02
+ EnvironmentSatisfaction 1.05         1.02
+         WorkLifeBalance 1.04         1.02
+    YearsWithCurrManager 2.45         1.56
+          YearsAtCompany 3.31         1.82
+      YearsInCurrentRole 2.52         1.59
+                     Age 1.44         1.20
+       TotalWorkingYears 1.93         1.39
+                JobLevel 1.49         1.22
+           MonthlyIncome 1.13         1.06
+        StockOptionLevel 1.81         1.35
+
+High Correlation
+
+  Parameter    VIF Increased SE
+ Department  88.38         9.40
+    JobRole 137.59        11.73
+
+# Predictions
+I provided an additional data set of 300 observations that do not have the labels (attrition or not attrition). We will refer to this data set as the “Competition Set” and is in the file “CaseStudy2CompSet No Attrition.csv”. I have the real labels and will thus assess the accuracy rate of your best classification model. 10% of your grade will depend on the sensitivity and specificity rate of your “best” classification model for identifying attrition.  
+
+* You must provide a model that will attain at least 60% sensitivity and specificity (60 each = 120 total) for the training and the validation set. Therefore, you must provide the labels (ordered by ID) in a csv file.  Please include this in your GitHub repository and call the file “Case2PredictionsXXXX Attrition.csv”. XXXX is your last name. (Example: Case2PredictionsSadler Attrition.csv” would be mine.)  An example submission file can be found on GitHub: Case2PredictionsClassifyEXAMPLE.csv.
+
+I have also provided an additional data set of 300 observations that do not have the Monthly Incomes. This data is in the file “CaseStudy2CompSet No Salary.csv”. I have the real monthly incomes (salaries) and will thus assess the RMSE regression model. 10% of your grade will depend on the RMSE (Root Mean square error) of your final model.
+
+* You must provide a model that will attain a RMSE < $3000 for the training and the validation set. Therefore, you must provide the predicted salaries (ordered by ID) in a csv file. Please include this in your GitHub repository and call the file “Case2PredictionsXXXX Salary.csv”.  XXXX is your last name.  (Example: Case2PredictionsSadler Salary.csv” would be mine.) An example submission file can be found on GitHub: Case2PredictionsRegressEXAMPLE.csv.
+
+Notes on models to fit: IMPORTANT: First and foremost, you may use outside models that we have not covered but it must be in addition to models that we have covered in class. This means for classifying attrition, you must use either k-NN or naive Bayes but may also use other models (logistic regression, random forest, LDA, SVM, etc) as long as you compare the results between the two or more models. You may then use any of the models to fulfill the 60/60 sensitivity/specificity requirement. This goes for regression as well; you must use linear regression but may include additional models for comparison and use in the competition (LASSO, random forest, ensemble models, etc.).  
+
+## KNN
+```{r KNN, echo=FALSE, message=FALSE, warning=FALSE}
+library(igraph)
+library(class)
+
+# new dataset for KNN
+knn.df <- clean.df
+
+# convert factors into integers
+knn.df[c(
+  "Attrition",
+  "JobRole",
+  "BusinessTravel",
+  "Department",
+  "EducationField",
+  "Gender",
+  "JobSatisfaction",
+  "MaritalStatus",
+  "OverTime",
+  "Over18"
+)] <-
+  lapply(knn.df[c(
+    "Attrition",
+    "JobRole",
+    "BusinessTravel",
+    "Department",
+    "EducationField",
+    "Gender",
+    "JobSatisfaction",
+    "MaritalStatus",
+    "OverTime",
+    "Over18"
+  )], as.integer)
+
+# split data into train and test data
+set.seed(12)
+partition_df <-
+  sample(seq_len(nrow(knn.df)), size = nrow(knn.df) * 0.80)
+train.df <- knn.df[partition_df, ]
+test.df <- knn.df[-partition_df, ]
+
+# run classification model on all the features
+knn_classification <-
+  class::knn(train.df[, c(3:4, 7:8, 11, 15:19, 23, 27:28, 30:32, 34)],
+             test.df[, c(3:4, 7:8, 11, 15:19, 23, 27:28, 30:32, 34)],
+             train.df$Attrition,
+             prob = TRUE,
+             k = 5)
+table(knn_classification, test.df$Attrition)
+results <-
+  confusionMatrix(table(knn_classification, test.df$Attrition))
+results
+
+k.optm = 1
+for (i in 1:30) {
+  knn.mod <-
+    knn(train.df[, c(3:4, 7:8, 11, 15:19, 23, 27:28, 30:32, 34)],
+        test.df[, c(3:4, 7:8, 11, 15:19, 23, 27:28, 30:32, 34)],
+        train.df$Attrition,
+        prob = TRUE,
+        k = i)
+  k.optm[i] <-
+    100 * sum(test.df$Attrition == knn.mod) / NROW(test.df$Attrition)
+  k = i
+  cat(k, "=", k.optm[i], "")
+}
+
+#Accuracy plot
+plot(k.optm,
+     type = "b",
+     xlab = "K- Value",
+     ylab = "Accuracy level")
+```
+
+The data set was divided into train (80% or 696 obersations) and test (20% or 174 observations) data sets. There are a total of 870 total observations. K will be set to 5.
+
+The accuracy for K=5 is 85.06%.
+
+In order to improve the accuracy of the model, a maximum percentage accuracy graph was created. KNN is looped through 30 times calculating the accuracy of the KNN model for ‘K’ values ranging from 1 to 30. This was done to check which ‘K’ value will result in the most accurate model.
+
+1 = 77.58621 2 = 75.86207 3 = 85.05747 4 = 86.2069 5 = 85.05747 6 = 85.63218 7 = 86.78161 8 = 87.35632 9 = 87.35632 10 = 87.35632 11 = 86.78161 12 = 87.35632 13 = 86.2069 14 = 87.35632 15 = 86.78161 16 = 86.78161 17 = 86.78161 18 = 86.78161 19 = 87.35632 20 = 87.35632 21 = 86.78161 22 = 86.78161 23 = 86.78161 24 = 86.78161 25 = 86.78161 26 = 86.78161 27 = 86.78161 28 = 86.78161 29 = 86.78161 30 = 86.78161 
+
+The model achieve maximum accuracy, 87.36%, when 'K' value was euqal to 8. 
+
+Confusion Matrix results:
+
+Confusion Matrix and Statistics
+
+                  
+knn_classification   1   2
+                 1 147  22
+                 2   4   1
+                                       
+               Accuracy : 0.8506       
+                 95% CI : (0.7888, 0.9)
+    No Information Rate : 0.8678       
+    P-Value [Acc > NIR] : 0.7864838    
+                                       
+                  Kappa : 0.0254       
+                                       
+ Mcnemar's Test P-Value : 0.0008561    
+                                       
+            Sensitivity : 0.97351      
+            Specificity : 0.04348      
+         Pos Pred Value : 0.86982      
+         Neg Pred Value : 0.20000      
+             Prevalence : 0.86782      
+         Detection Rate : 0.84483      
+   Detection Prevalence : 0.97126      
+      Balanced Accuracy : 0.50849      
+                                       
+       'Positive' Class : 1            
+
+The model is 85.06% accurate at prediciting attrition. 
+
+- The sensitivity (ability to correctly classify true attrition) is 97.35%.
+
+- The specificity (ability to correctly classify employees who've stayed) is 4.34%.
+
+- Since the overall attrition rate is only 16%, it is important to be able to accurately classify employees who have truely left the company. 
+
+## Naive Bayes
+```{r Naive Bayes, echo=FALSE, message=FALSE, warning=FALSE}
+library(e1071)
+library(arsenal)
+
+# create new dataframe
+setwd(path_loc)
+nb.df <- clean.df
+
+set.seed(12)
+# read data set with no attrition data for predictions
+nb_pred <-  read.csv("CaseStudy2CompSet No Attrition.csv")
+nb_pred$Attrition <- NA
+
+# replicate main.df
+nb_pred <- nb_pred[c(1,36,2:35)]
+nb_pred <- nb_pred %>% subset(select = -c(EmployeeCount, StandardHours))
+nb_pred$YearlySalary <- nb_pred$MonthlyIncome * 12
+
+# split training data into train and test data
+partition_df <- sample(seq_len(nrow(nb.df)), size = nrow(nb.df)*0.75)
+train.df <- nb.df[partition_df, ]
+test.df <- nb.df[-partition_df, ]
+
+nb_model = naiveBayes(train.df[, c(3:4, 7:8, 11, 15:19, 23, 27:28, 30:32, 34)], train.df$Attrition, laplace = 1)
+results = confusionMatrix(table(predict(nb_model,test.df[, c(3:4, 7:8, 11, 15:19, 23, 27:28, 30:32, 34)]),test.df$Attrition))
+results
+
+# compare nb.df dataset to nb_pred
+summary(comparedf(nb.df, nb_pred))
+
+# add prediction to nb_pred dataframe
+nb_pred$Attrition <- nb_model %>% predict(nb_pred)
+
+# export only ID and Attrition to csv
+export_df <- nb_pred[c(1,2)]
+write.csv(export_df, "Case2PreditionSchwebke Attrition.csv", row.names=FALSE)
+```
+
+The data set was divided into train (75%) and test (25%) data sets. There are a total of 870 total observations. 
+
+Confusion Matrix and Statistics
+
+     
+       No Yes
+  No  189   1
+  Yes   0  28
+                                           
+               Accuracy : 0.9954           
+                 95% CI : (0.9747, 0.9999) 
+    No Information Rate : 0.867            
+    P-Value [Acc > NIR] : 0.000000000001053
+                                           
+                  Kappa : 0.9798           
+                                           
+ Mcnemar's Test P-Value : 1                
+                                           
+            Sensitivity : 1.0000           
+            Specificity : 0.9655           
+         Pos Pred Value : 0.9947           
+         Neg Pred Value : 1.0000           
+             Prevalence : 0.8670           
+         Detection Rate : 0.8670           
+   Detection Prevalence : 0.8716           
+      Balanced Accuracy : 0.9828           
+                                           
+       'Positive' Class : No                     
+                                
+The model is 99.54% accurate at prediciting attrition. 
+
+- The sensitivity (ability to correctly classify true attrition) is 100%.
+
+- The specificity (ability to correctly classify employees who've stayed) is 96.6%.
+
+- Since the overall attrition rate is only 16%, it is important to be able to accurately classify employees who have truely left the company. 
+
+## Linear Regression
+```{r Linear Regression, echo=FALSE, message=FALSE, warning=FALSE}
+setwd(path_loc)
+
+# Create a training df with only numeric variables
+lr.df <- clean.df 
+
+# convert factors into integers
+lr.df[c(
+  "Attrition",
+  "JobRole",
+  "BusinessTravel",
+  "Department",
+  "EducationField",
+  "Gender",
+  "JobSatisfaction",
+  "MaritalStatus",
+  "OverTime",
+  "Over18"
+)] <-
+  lapply(lr.df[c(
+    "Attrition",
+    "JobRole",
+    "BusinessTravel",
+    "Department",
+    "EducationField",
+    "Gender",
+    "JobSatisfaction",
+    "MaritalStatus",
+    "OverTime",
+    "Over18"
+  )], as.integer)
+
+# split the data into train and test
+partition_df <- sample(seq_len(nrow(lr.df)), size = nrow(lr.df)*0.8)
+train.df <- lr.df[partition_df, ]
+test.df <- lr.df[-partition_df, ]
+
+# build model using MonthlyIncome 
+# lr_model <- lm(MonthlyIncome ~ OverTime + MaritalStatus + Department + JobRole + DistanceFromHome + Attrition +
+#       JobSatisfaction + EnvironmentSatisfaction + WorkLifeBalance + YearsWithCurrManager + YearsAtCompany + YearsInCurrentRole + Age + TotalWorkingYears + JobLevel + StockOptionLevel, data = train.df)
+
+# lr_model <- lm(MonthlyIncome ~ Department + JobRole + DistanceFromHome + EnvironmentSatisfaction + YearsWithCurrManager + TotalWorkingYears + JobLevel, data = train.df)
+
+lr_model <- lm(MonthlyIncome ~ Department + JobRole + YearsWithCurrManager + TotalWorkingYears + JobLevel, data = train.df)
+
+# model summary
+summary(lr_model)
+
+# make predictions using test dataset
+lr_pred <- lr_model %>% predict(test.df)
+actuals_preds <- data.frame(cbind(actuals=test.df$MonthlyIncome, predicted=lr_pred))
+correlation_accuracy <- cor(actuals_preds)
+correlation_accuracy
+
+# evaluate performance of the model with RMSE
+RMSE(lr_pred, test.df$MonthlyIncome)
+
+# import csv file with no salary data
+lr_pred.df <-  read.csv("CaseStudy2CompSet No Salary.csv")
+
+# convert factors into integers
+lr_pred.df[c(
+  "Attrition",
+  "JobRole",
+  "BusinessTravel",
+  "Department",
+  "EducationField",
+  "Gender",
+  "JobSatisfaction",
+  "MaritalStatus",
+  "OverTime",
+  "Over18"
+)] <-
+  lapply(lr_pred.df[c(
+    "Attrition",
+    "JobRole",
+    "BusinessTravel",
+    "Department",
+    "EducationField",
+    "Gender",
+    "JobSatisfaction",
+    "MaritalStatus",
+    "OverTime",
+    "Over18"
+  )], as.integer)
+
+# replicate main.df
+lr_pred.df <- lr_pred.df %>% subset(select = -c(EmployeeCount, StandardHours))
+lr_pred.df$YearlySalary <- nb_pred$MonthlyIncome * 12
+
+# fix ID name
+colnames(lr_pred.df)[1] <- "ID"
+
+# add a blank column for monthly income
+lr_pred.df <- lr_pred.df %>% keep(is.numeric)
+lr_pred.df$MonthlyIncome <- NA 
+
+# add prediction to MonthlyIncome column
+lr_pred.df$MonthlyIncome <- lr_model %>% predict(lr_pred.df)
+grep("MonthlyIncome", colnames(lr_pred.df))
+
+# export only ID and MonthlyIncome to csv
+export_df <- nb_pred[c(1,35)]
+write.csv(export_df, "Case2PreditionSchwebke Salary.csv", row.names=FALSE)
+```
+
+The data set was divided into train (80% or 696 obersations) and test (20% or 174 observations) data sets. There are a total of 870 total observations. 
+
+The initial linear regression model used was -- 
+
+MonthlyIncome ~ OverTime + MaritalStatus + Department + JobRole + DistanceFromHome + Attrition + JobSatisfaction + EnvironmentSatisfaction + WorkLifeBalance + YearsWithCurrManager + YearsAtCompany + YearsInCurrentRole + Age + TotalWorkingYears + JobLevel + StockOptionLevel
+
+It was reduced to --
+
+MonthlyIncome ~ Department + JobRole + YearsWithCurrManager + TotalWorkingYears + JobLevel
+
+The p-value for the intercept is 0.030559, which is below than 0.05.
+
+Residual standard error: 1355 on 689 degrees of freedom
+Multiple R-squared:  0.9135,	Adjusted R-squared:  0.9128 
+F-statistic:  1213 on 6 and 689 DF,  p-value: < 0.00000000000000022
+
+Adjusted R-squared says that 91.3% of the variation in the response variable is explained by the predictor variables. The F-statistic value is 1213 which leads to a p-value of < 0.0000000000000002, which is highly significant.
+
+This linear regression model gives us an RMSE of 1,419 on monthly income, which is below the evaluation criteria of < $3,000.
+
+
+# Job Role Specific Trends
+```{r Job Role Specific Trends, echo=FALSE, message=FALSE, warning=FALSE}
+# define a vector for all factor variables
+role_factors <-
+  c(3:5, 7:12, 14:15, 17:18, 21, 23:34)
+
+# print bar plot for each factor
+for (role_fac in role_factors) {
+  role_plot <- getFactorPctPlot(main.df, 16, role_fac)
+  print(role_plot)
+}
+
+```
+
+
+# Other Interesting Trends
+```{r Other Interesting Trends, echo=FALSE, message=FALSE, warning=FALSE}
+# job satisfaction and salary
+attr_plot <- getFactorPctPlot(main.df, 17, 35)
+  print(attr_plot)
+
+# ages in groups of 5 years
+main.df %>% mutate(agegroups = cut_width(Age, width = 5, boundary = 0)) %>% ggplot(aes(x = agegroups, fill = Attrition)) +
+  geom_bar() +
+  labs(x = "Age Group", y = "", title = "Age Group Impact on Attrition") +
+  scale_fill_brewer(palette = "Paired") +  ggthemes::theme_par() + facet_wrap( ~Gender)
+
+# gender compared to age
+main.df %>% mutate(agegroups = cut_width(Age, width = 5, boundary = 0)) %>% count(agegroups = factor(agegroups), Gender = factor(Gender)) %>%
+  mutate(pct = prop.table(n)) %>% ggplot(aes(
+    x = agegroups,
+    y = pct,
+    fill = Gender,
+    label = scales::percent(pct)
+  )) +
+  geom_col(position = "dodge") +
+  geom_text(
+    position = position_dodge(width = .9),
+    size = 3,
+    color = "black",
+    vjust = -.5
+  ) +
+  labs(x = "Age Groups", y = "Percent", title = "Gender Percentage by Age Groups") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  coord_cartesian(ylim = c(0, .20)) +
+  scale_fill_brewer(palette = "Paired") +  ggthemes::theme_par()
+
+# gender compared to salary
+attr_plot <- getFactorPctPlot(main.df, 12, 35)
+  print(attr_plot)
+  
+# gender compared to role
+attr_plot <- getFactorPctPlot(main.df, 12, 16)
+  print(attr_plot)
+
+# gender compared to marital status
+attr_plot <- getFactorPctPlot(main.df, 12, 18)
+  print(attr_plot)
+
+# gender compared to education
+attr_plot <- getFactorPctPlot(main.df, 12, 9)
+  print(attr_plot)
+
+# gender compared to education field
+attr_plot <- getFactorPctPlot(main.df, 12, 10)
+  print(attr_plot)
+
+# total working years
+attr_plot <- getFactorPctPlot(main.df, 12, 28)
+  print(attr_plot)
+
+# job involvement and over time
+attr_plot <- getFactorPctPlot(main.df, 14, 23)
+  print(attr_plot)
+
+# yearly salary
+group_var <-
+  main.df %>% mutate(group_cut = cut_width(
+    YearlySalary,
+    width = 20000,
+    boundary = 0,
+    dig.lab = 10
+  ))
+group_var <-
+  group_var %>% group_by(group_cut, Gender) %>% dplyr::summarize(count = dplyr::n()) %>% mutate(group_total = sum(count))
+group_var$pct <-
+  round(group_var$count / group_var$group_total, digits = 2) * 100
+group_var %>% ggplot(aes(x = group_cut, y = pct, fill=Gender)) + geom_bar(stat =
+                                                                               "identity", alpha = .6) +
+  labs(x = "Salary", y = "Gender Percent", title = "Salary by Gender")  +
+  geom_text(
+    aes(y = pct, label = scales::percent(pct / 100)),
+    fontface = "bold",
+    position = position_stack(),
+    hjust = "inward",
+    vjust = "center",
+    color = "white",
+  ) + coord_flip() + scale_fill_brewer(palette = "Paired") +  ggthemes::theme_par()
+```
+
+# Documents and Files
+
+- Create a GitHub repository named CaseStudy2DDS with an RMarkdown file containing an executive summary, introduction to the project, all supporting code and analysis, and the slides for the presentation.  The repository should also include your prediction csv file and don’t forget to put the link to the YouTube video in the RMarkdown file.
+
+- Submit a link to the GitHub repository via the space provided for the Case Study 02 page in 2DS. 
+
+- Finally, make sure put the link to the YouTube video on the Google Doc. https://docs.google.com/document/d/1NtsA9mzFAWCKLJFHuj548YC66WgbFv8mNORQrv6nyEg/edit?ts=5e7665ac
+
+- Finally, create a Knit file out of your RMD and display it on your GitHub Site you created in Unit 12.  Include the link to your Youtube video (and a link to your RShiny app too if there is one!)
+
+- Create an RShiny App to help visualize you results.  The amount of bonus points awarded will be based on correctness, creativeness, effectiveness of the visualization / app. 
+
+# Bonus
+
+The data scientist with the highest sensitivity + specificity (both at least 60%) on the classification validation set will win the Bonus: 5 extra points and bragging rights!  This bonus is between all 4 sections.  1 prize between all 40+ students. 
+
+The data scientist with the lowest RMSE on the regression validation set will win the Bonus: 5 extra points and bragging rights!  This bonus is between all 4 sections.  1 prize between all 40+ students.
